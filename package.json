@@ -2,8 +2,15 @@
   "name": "@thomas.gafner/prosemirror-br-encoded-hierarchy-paragraph",
   "version": "0.1.0",
   "description": "Functions that derive hierarchy from paragraphs by interpreting line breaks.",
-	"keywords": [
-    "ProseMirror","transformation","utils","helpers","line break","br","paragraph","hierarchy"
+  "keywords": [
+    "ProseMirror",
+    "transformation",
+    "utils",
+    "helpers",
+    "line break",
+    "br",
+    "paragraph",
+    "hierarchy"
   ],
   "main": "dist/index.js",
   "module": "dist/index.es.js",
