@@ -35,6 +35,8 @@ class BiHrcl {
 		if (!!this.sublist != !!othr.sublist) return false
 		if (!!this.leading != !!othr.leading) return false
 		if (!!this.trailing != !!othr.trailing) return false
+		if (this.nofNodes != othr.nofNodes) return false
+		if (this.trailingBreaks != othr.trailingBreaks) return false
 		if (this.leading) {
 			const res = compNodes(this.leading, othr.leading)
 			if (!res) return false
@@ -46,6 +48,7 @@ class BiHrcl {
 		if(this.sublist) {
 			return biHrclEqual(this.sublist, othr.sublist)
 		}
+		return true
   }
 }
 
@@ -101,18 +104,21 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth) {
 	let nofBreak = 0;
 	let doubleBreakOnce = false;
 	let i=startIndex;
+	let lastBrNode; // undefined
 	while (i<nodes.length) {
 		const node = nodes[i];
 		// console.log('n', node.toString());
 		if (node.type !== lineBreakType) {
+			// prepend remainding brs
+			// console.log('nofBreak', nofBreak)
+			for (let i=2;i<nofBreak;i++) nbs.push(lastBrNode)
 			nbs.push(node);
 			nofBreak = 0;
 		} else { // line break
+			lastBrNode = node
+			// console.log('lb:', doubleBreakOnce?'D':' ', 'b=', nofBreak, 'n=', nbs.length)
 			if (0 < nbs.length) {
 				treatNbs(nbs, doubleBreakOnce, onlyOneLeadingResult, severalLeadingResult);
-				if (doubleBreakOnce == false && 0 < nofBreak) {
-					doubleBreakOnce = true;
-				}
 			} else if (onlyOneLeadingResult.leading.length == 0) { // leading line break
 				// do recurse
 				let resTrailing;
@@ -129,6 +135,10 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth) {
 					return subBiHrcl(depth+1, resTrailing, resTrailing.nofNodes+1)
 				}
 			} // all other breaks are just counted
+			if (doubleBreakOnce == false && nofBreak == 1) {
+				doubleBreakOnce = true;
+				// console.log('DBO')
+			}
 			nofBreak++;
 			nbs = [];
 		}
@@ -137,6 +147,10 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth) {
 
 	// treat remaining nbs (trailing ones most of the time)
 	treatNbs(nbs, doubleBreakOnce, onlyOneLeadingResult, severalLeadingResult);
+
+	// console.log('dbo', doubleBreakOnce)
+	// console.log('ool', onlyOneLeadingResult)
+	// console.log('svl', severalLeadingResult)
 
 	const src = doubleBreakOnce?severalLeadingResult:onlyOneLeadingResult;
 	const leading = src.leading;
