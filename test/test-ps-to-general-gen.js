@@ -92,15 +92,15 @@ describe("psToGeneralGen", () => {
 		)
 	)
 
-	// it.only("takes the first double br occurrance as separator to split leading and trailing node groups treats any additional br of other multiple occurrances as content", () =>
-	// 	apply(
-	// 		doc(
-	// 			p("AB",br(),"CD",br(),br(),"EF",br(),"GH",br(),br(),"IJ")
-	// 		),[
-	// 			newBiHrcl(0, [[t("AB")], [t("CD")]],  [[t("EF")],[t("GH")],[br(),t("IJ")]], 11)
-	// 		]
-	// 	)
-	// )
+	it("takes the first double br occurrance as separator to split leading and trailing node groups treats any additional br of other multiple occurrances as content", () =>
+		apply(
+			doc(
+				p("AB",br(),"CD",br(),br(),"EF",br(),"GH",br(),br(),"IJ")
+			),[
+				newBiHrcl(0, [[t("AB")], [t("CD")]],  [[t("EF")],[t("GH")],[br(),t("IJ")]], 11)
+			]
+		)
+	)
 
 
 

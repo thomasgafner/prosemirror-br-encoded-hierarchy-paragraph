@@ -103,6 +103,7 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth) {
 	let nbs = [];
 	let nofBreak = 0;
 	let doubleBreakOnce = false;
+	let isFirstDoubleBreak = false;
 	let i=startIndex;
 	let lastBrNode; // undefined
 	while (i<nodes.length) {
@@ -110,8 +111,8 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth) {
 		// console.log('n', node.toString());
 		if (node.type !== lineBreakType) {
 			// prepend remainding brs
-			// console.log('nofBreak', nofBreak)
-			for (let i=2;i<nofBreak;i++) nbs.push(lastBrNode)
+			// console.log('nofBreak', isFirstDoubleBreak?'f':' ', nofBreak)
+			for (let i=isFirstDoubleBreak?2:1;i<nofBreak;i++) nbs.push(lastBrNode)
 			nbs.push(node);
 			nofBreak = 0;
 		} else { // line break
@@ -135,9 +136,14 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth) {
 					return subBiHrcl(depth+1, resTrailing, resTrailing.nofNodes+1)
 				}
 			} // all other breaks are just counted
-			if (doubleBreakOnce == false && nofBreak == 1) {
-				doubleBreakOnce = true;
-				// console.log('DBO')
+			if (nofBreak == 1) {
+				if (doubleBreakOnce == false) {
+					doubleBreakOnce = true;
+					isFirstDoubleBreak = true;
+					// console.log('DBO')
+				} else {
+					isFirstDoubleBreak = false;
+				}
 			}
 			nofBreak++;
 			nbs = [];
