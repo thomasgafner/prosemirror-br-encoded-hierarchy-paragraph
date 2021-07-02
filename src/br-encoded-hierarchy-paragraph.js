@@ -15,18 +15,50 @@ const compNodes = function(as, bs) {
 	return true
 }
 
+const compAttrsArray = function(as, bs) {
+	if (!!as != !!bs) return false
+	if (as.length != bs.length) return false
+	for (let i=0;i<as.length;i++) {
+		const aAttrs = as[i]
+		const bAttrs = bs[i]
+		// TODO may be we have to use a deep object compare function instead:
+		const aKeys = Object.keys(aAttrs)
+		const bKeys = Object.keys(bAttrs)
+		if (aKeys.length != bKeys.length) return false
+		for (let j=0;j<aKeys.length;j++) {
+			const aKey = aKeys[j]
+			if (aAttrs[aKey] != bAttrs[aKey]) return false
+		}
+	}
+	return true
+}
+
 // ::- Hierarchical info of elements wit h two parts.
 class BiHrcl {
-  // :: (int, [[Nodes]], [[Nodes]], [BiHrcl], int, int)
+  // :: (int, [[Node]], [[Node]], [BiHrcl], int, int)
   // Create a hierarchical info.
   constructor(depth, leading, trailing, sublist, nofNodes, trailingBreaks) {
     this.depth = depth
 		this.leading = leading
 		this.trailing = trailing
+		this.setLeadingAttrs(Object.create(null))
+		this.setTrailingAttrs(Object.create(null))
 		this.sublist = sublist
 		this.nofNodes = nofNodes
 		this.trailingBreaks = trailingBreaks
   }
+
+	// :: (Object)
+	// Set the attributes of all leading groups to the given attributes.
+	setLeadingAttrs(attrs) {
+		this.leadingAttrs = this.leading.map(nGrp => attrs)
+	}
+
+	// :: (Object)
+	// Set the attributes of all trailing groups to the given attributes.
+	setTrailingAttrs(attrs) {
+		this.trailingAttrs = this.trailing.map(nGrp => attrs)
+	}
 
 	// :: (BiHrcl) → bool
   // Test whether two hierarchical info objects are the same.
@@ -45,6 +77,13 @@ class BiHrcl {
 			const res = compNodes(this.trailing, othr.trailing)
 			if (!res) return false
 		}
+		// Each group of nodes actually could have got attrs from its origin parent node.
+		// In the case of a p with brs the attrs of each group are the same - the one of the p.
+		// In the case of an ul/ol-li (with brs) the same holds for the li.
+		// But if the node groups originated from a dl, then the attrs could be
+		// individual for each group, because they originate either from a dt or dd.
+		if (!compAttrsArray(this.leadingAttrs, othr.leadingAttrs)) return false
+		if (!compAttrsArray(this.trailingAttrs, othr.trailingAttrs)) return false
 		if(this.sublist) {
 			return biHrclEqual(this.sublist, othr.sublist)
 		}
@@ -88,6 +127,8 @@ export function psToGeneralGen(lineBreakType, maxDepth = 3) {
 			} else {
 				pres = pToGeneralFlat(lineBreakType, nodes, 0, depth);
 			}
+			pres.setLeadingAttrs(p.attrs)
+			pres.setTrailingAttrs(p.attrs)
 			tgtPs.push(pres);
 			lastRes = pres;
 		});

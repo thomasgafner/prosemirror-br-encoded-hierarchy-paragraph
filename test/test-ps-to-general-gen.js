@@ -13,21 +13,55 @@ function apply(doc, expectedResult) {
 
 	const psToGeneral = psToGeneralGen(ntps.hard_break, maxDepth)
 	const actualResult = psToGeneral(doc)
-	console.log('res', actualResult)
-	if (0 < actualResult.length) {
-		if (0 < actualResult[0].leading?.length) {
-			console.log('res [0].leading', actualResult[0].leading)
-		}
-		if (0 < actualResult[0].trailing?.length) {
-			console.log('res [0].trailing', actualResult[0].trailing)
-		}
-	}
+
+	// console.log('res', actualResult)
+	// if (0 < actualResult.length) {
+	// 	if (0 < actualResult[0].leading?.length) {
+	// 		console.log('res [0].leading', actualResult[0].leading)
+	// 	}
+	// 	if (0 < actualResult[0].trailing?.length) {
+	// 		console.log('res [0].trailing', actualResult[0].trailing)
+	// 	}
+	// 	if (0 < actualResult[0].leadingAttrs?.length) {
+	// 		console.log('res [0].leadingAttrs', actualResult[0].leadingAttrs)
+	// 	}
+	// 	if (0 < actualResult[0].trailingAttrs?.length) {
+	// 		console.log('res [0].trailingAttrs', actualResult[0].trailingAttrs)
+	// 	}
+	// }
+
+	// console.log('exp', expectedResult)
+	// if (0 < expectedResult.length) {
+	// 	if (0 < expectedResult[0].leading?.length) {
+	// 		console.log('exp [0].leading', expectedResult[0].leading)
+	// 	}
+	// 	if (0 < expectedResult[0].trailing?.length) {
+	// 		console.log('exp [0].trailing', expectedResult[0].trailing)
+	// 	}
+	// 	if (0 < actualResult[0].leadingAttrs?.length) {
+	// 		console.log('exp [0].leadingAttrs', expectedResult[0].leadingAttrs)
+	// 	}
+	// 	if (0 < actualResult[0].trailingAttrs?.length) {
+	// 		console.log('exp [0].trailingAttrs', expectedResult[0].trailingAttrs)
+	// 	}
+	// }
 
 	ist(actualResult, expectedResult, biHrclEqual)
 }
 
 function t(str, marks) {
 	return doc().type.schema.text(str, marks)
+}
+
+function pAttrs(node, attrs) {
+	node.attrs = attrs
+	return node
+}
+
+function iAttrs(biHrcl, attrs) {
+	biHrcl.setLeadingAttrs(attrs)
+	biHrcl.setTrailingAttrs(attrs)
+	return biHrcl
 }
 
 describe("psToGeneralGen", () => {
@@ -106,15 +140,23 @@ describe("psToGeneralGen", () => {
 			)
 		)
 
-		// TODO before writing too many tests and code include the concept of the attrs
-		// Each group of nodes actually could have got attrs from its origin parent node.
-		// In the case of a p with brs the attrs of each group are the same - the one of the p.
-		// In the case of an ul/ol-li (with brs) the same holds for the li.
-		// But if the node groups originated from a dl, then the attrs could be
-		// individual for each group, because they originate either from a dt or dd.
-
 	})
 
+	describe("concerning attributes of the groups", () => {
+
+		const attrs0 = {ex:true}
+
+		it("takes the attributes of the paragraph and assigns them to every group", () =>
+			apply(
+				doc(
+					pAttrs(p("AB",br(),"CD"), attrs0)
+				),[
+					iAttrs(newBiHrcl(0, [[t("AB")]],  [[t("CD")]], 3), attrs0)
+				]
+			)
+		)
+
+	})
 
 	describe("in the hierarchical cases", () => {
 
