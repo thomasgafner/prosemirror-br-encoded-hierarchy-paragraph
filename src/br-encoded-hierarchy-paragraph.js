@@ -17,17 +17,19 @@ const compNodes = function(as, bs) {
 
 const compAttrsArray = function(as, bs) {
 	if (!!as != !!bs) return false
-	if (as.length != bs.length) return false
-	for (let i=0;i<as.length;i++) {
-		const aAttrs = as[i]
-		const bAttrs = bs[i]
-		// TODO may be we have to use a deep object compare function instead:
-		const aKeys = Object.keys(aAttrs)
-		const bKeys = Object.keys(bAttrs)
-		if (aKeys.length != bKeys.length) return false
-		for (let j=0;j<aKeys.length;j++) {
-			const aKey = aKeys[j]
-			if (aAttrs[aKey] != bAttrs[aKey]) return false
+	if (as && bs) {
+		if (as.length != bs.length) return false
+		for (let i=0;i<as.length;i++) {
+			const aAttrs = as[i]
+			const bAttrs = bs[i]
+			// TODO may be we have to use a deep object compare function instead:
+			const aKeys = Object.keys(aAttrs)
+			const bKeys = Object.keys(bAttrs)
+			if (aKeys.length != bKeys.length) return false
+			for (let j=0;j<aKeys.length;j++) {
+				const aKey = aKeys[j]
+				if (aAttrs[aKey] != bAttrs[aKey]) return false
+			}
 		}
 	}
 	return true
@@ -143,6 +145,7 @@ export function psToGeneralGen(lineBreakType, maxDepth = 3) {
 
 // Collect leading and trailing
 function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth) {
+	// console.log('p', depth)
 	const onlyOneLeadingResult = {leading:[], trailing:[]};
 	const severalLeadingResult = {leading:[], trailing:[]};
 	let nbs = [];
@@ -168,6 +171,7 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth) {
 			} else if (onlyOneLeadingResult.leading.length == 0) { // leading line break
 				// do recurse
 				let resTrailing;
+				// console.log('rr', depth)
 				if (depth + 1 < maxDepth - 1) {
 					resTrailing = pToGeneral(lineBreakType, maxDepth, nodes, i+1, depth+1);
 				} else {

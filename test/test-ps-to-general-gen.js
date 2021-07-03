@@ -14,7 +14,7 @@ function apply(doc, expectedResult) {
 	const psToGeneral = psToGeneralGen(ntps.hard_break, maxDepth)
 	const actualResult = psToGeneral(doc)
 
-	// console.log('res', actualResult)
+	console.log('res', actualResult)
 	// if (0 < actualResult.length) {
 	// 	if (0 < actualResult[0].leading?.length) {
 	// 		console.log('res [0].leading', actualResult[0].leading)
@@ -161,24 +161,84 @@ describe("psToGeneralGen", () => {
 	describe("in the hierarchical cases", () => {
 
 		// Tests where brs are at the beginning and at the end to control hierarchy.
+		// Given a leading br the function raises the following groups.
+		// Given a trailing br causes the function to lower the level by one.
 
-		// it.only("a trailing br raises the following group while a leading br lowers the group by one level", () =>
+		it("handles a single sublist of three or more groups)", () =>
+			apply(
+				doc(
+					p("A"),
+					p("B"),
+					p(br(), "i"),
+					p("ii"),
+					p("iii", br()),
+					p("C")
+				),[
+					newBiHrcl(0, [[t("A")]], [], 1),
+					newBiHrcl(0, [[t("B")]], [], 1),
+					subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 1), 2),
+					newBiHrcl(1, [[t("ii")]], [], 1),
+					newBiHrcl(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here!
+					newBiHrcl(0, [[t("C")]], [], 1)
+				]
+			)
+		)
+
+		it("handles a single sublist of two groups", () =>
+			apply(
+				doc(
+					p("A"),
+					p("B"),
+					p(br(), "i"),
+					p("ii", br()),
+					p("C")
+				),[
+					newBiHrcl(0, [[t("A")]], [], 1),
+					newBiHrcl(0, [[t("B")]], [], 1),
+					subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 1), 2),
+					newBiHrcl(1, [[t("ii")]], [], 2, 1), // TODO no trailingBreaks here!
+					newBiHrcl(0, [[t("C")]], [], 1)
+				]
+			)
+		)
+
+		it("handles a single sublist only consisting of just one group", () =>
+			apply(
+				doc(
+					p("A"),
+					p("B"),
+					p(br(), "i", br()),
+					p("C")
+				),[
+					newBiHrcl(0, [[t("A")]], [], 1),
+					newBiHrcl(0, [[t("B")]], [], 1),
+					subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 2, 1), 3),
+					newBiHrcl(0, [[t("C")]], [], 1)
+				]
+			)
+		)
+
+		// TODO change the way the 'nesting' is indicated isOneLevelLower:true instead of sublist:{..}
+
+		// it("can handle more than two levels", () =>
 		// 	apply(
 		// 		doc(
 		// 			p("A"),
-		// 			p("B", br()),
-		// 			p("i"),
+		// 			p("B"),
+		// 			p(br(), "i"),
+		// 			p(br(), "U"),
+		// 			p("V", br()),
 		// 			p("ii"),
-		// 			p("iii"),
-		// 			p(br(), "C")
+		// 			p("iii", br()),
+		// 			p("C")
 		// 		),[
 		// 			newBiHrcl(0, [[t("A")]], [], 1),
 		// 			newBiHrcl(0, [[t("B")]], [], 1),
-		// 			subBiHrcl(0, [
-		// 				newBiHrcl(1, [[t("i")]], [], 1),
-		// 				newBiHrcl(1, [[t("ii")]], [], 1),
-		// 				newBiHrcl(1, [[t("iii")]], [], 1),
-		// 			], 3),
+		// 			subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 1), 2),
+		// 			subBiHrcl(2, newBiHrcl(2, [[t("U")]], [], 1), 2),
+		// 			newBiHrcl(2, [[t("V")]], [], 2),
+		// 			newBiHrcl(1, [[t("ii")]], [], 1),
+		// 			newBiHrcl(1, [[t("iii")]], [], 2, 1),
 		// 			newBiHrcl(0, [[t("C")]], [], 1)
 		// 		]
 		// 	)
