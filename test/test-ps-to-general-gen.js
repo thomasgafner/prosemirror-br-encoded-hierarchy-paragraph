@@ -162,6 +162,28 @@ describe("psToGeneralGen", () => {
 
 		// Tests where brs are at the beginning and at the end to control hierarchy.
 
+		// it.only("a trailing br raises the following group while a leading br lowers the group by one level", () =>
+		// 	apply(
+		// 		doc(
+		// 			p("A"),
+		// 			p("B", br()),
+		// 			p("i"),
+		// 			p("ii"),
+		// 			p("iii"),
+		// 			p(br(), "C")
+		// 		),[
+		// 			newBiHrcl(0, [[t("A")]], [], 1),
+		// 			newBiHrcl(0, [[t("B")]], [], 1),
+		// 			subBiHrcl(0, [
+		// 				newBiHrcl(1, [[t("i")]], [], 1),
+		// 				newBiHrcl(1, [[t("ii")]], [], 1),
+		// 				newBiHrcl(1, [[t("iii")]], [], 1),
+		// 			], 3),
+		// 			newBiHrcl(0, [[t("C")]], [], 1)
+		// 		]
+		// 	)
+		// )
+
 		// TODO
 
 

@@ -51,13 +51,17 @@ class BiHrcl {
 	// :: (Object)
 	// Set the attributes of all leading groups to the given attributes.
 	setLeadingAttrs(attrs) {
-		this.leadingAttrs = this.leading.map(nGrp => attrs)
+		if (this.leading) {
+			this.leadingAttrs = this.leading.map(nGrp => attrs)
+		}
 	}
 
 	// :: (Object)
 	// Set the attributes of all trailing groups to the given attributes.
 	setTrailingAttrs(attrs) {
-		this.trailingAttrs = this.trailing.map(nGrp => attrs)
+		if (this.trailing) {
+			this.trailingAttrs = this.trailing.map(nGrp => attrs)
+		}
 	}
 
 	// :: (BiHrcl) → bool
