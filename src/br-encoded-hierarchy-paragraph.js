@@ -126,6 +126,9 @@ export function psToGeneralGen(lineBreakType, maxDepth = 3) {
 			// console.log('p', p.toString());
 			const nodes = [];
 			p.forEach(n => nodes.push(n));
+			if (lastRes && lastRes.sublist) {
+				lastRes = lastRes.sublist
+			}
 			const depth = lastRes?lastRes.depth-lastRes.trailingBreaks:0;
 			let pres;
 			if (depth < maxDepth -1) {
