@@ -5,7 +5,7 @@ const {doc, p, br} = require("./builder")
 const {psToGeneralGen,
 	biHrclEqual, BiHrcl} = require("..") // TODO later from other package
 
-function newBiHrcl(depth, leading, trailing, nofNodes, trailingBreaks) {
+function bi(depth, leading, trailing, nofNodes, trailingBreaks) {
 	return new BiHrcl(depth, leading, trailing, nofNodes, trailingBreaks)
 }
 
@@ -79,7 +79,7 @@ describe("psToGeneralGen", () => {
 				doc(
 					p("ABCD")
 				),[
-					newBiHrcl(0, [[t("ABCD")]],  [], 1)
+					bi(0, [[t("ABCD")]],  [], 1)
 				]
 			)
 		)
@@ -89,7 +89,7 @@ describe("psToGeneralGen", () => {
 				doc(
 					p("AB",br(),"CD")
 				),[
-					newBiHrcl(0, [[t("AB")]],  [[t("CD")]], 3)
+					bi(0, [[t("AB")]],  [[t("CD")]], 3)
 				]
 			)
 		)
@@ -99,7 +99,7 @@ describe("psToGeneralGen", () => {
 				doc(
 					p("AB",br(),"CD",br(),"EF")
 				),[
-					newBiHrcl(0, [[t("AB")]],  [[t("CD")], [t("EF")]], 5)
+					bi(0, [[t("AB")]],  [[t("CD")], [t("EF")]], 5)
 				]
 			)
 		)
@@ -109,7 +109,7 @@ describe("psToGeneralGen", () => {
 				doc(
 					p("AB",br(),"CD",br(),br(),"EF")
 				),[
-					newBiHrcl(0, [[t("AB")], [t("CD")]],  [[t("EF")]], 6)
+					bi(0, [[t("AB")], [t("CD")]],  [[t("EF")]], 6)
 				]
 			)
 		)
@@ -119,7 +119,7 @@ describe("psToGeneralGen", () => {
 				doc(
 					p("AB",br(),"CD",br(),br(),br(),br(),"EF")
 				),[
-					newBiHrcl(0, [[t("AB")], [t("CD")]],  [[br(),br(),t("EF")]], 8)
+					bi(0, [[t("AB")], [t("CD")]],  [[br(),br(),t("EF")]], 8)
 				]
 			)
 		)
@@ -129,7 +129,7 @@ describe("psToGeneralGen", () => {
 				doc(
 					p("AB",br(),"CD",br(),"EF",br(),br(),"GH",br(),"IJ",br(),"KL",br(),"MN")
 				),[
-					newBiHrcl(0, [[t("AB")], [t("CD")], [t("EF")]],  [[t("GH")], [t("IJ")], [t("KL")], [t("MN")]], 14)
+					bi(0, [[t("AB")], [t("CD")], [t("EF")]],  [[t("GH")], [t("IJ")], [t("KL")], [t("MN")]], 14)
 				]
 			)
 		)
@@ -139,7 +139,7 @@ describe("psToGeneralGen", () => {
 				doc(
 					p("AB",br(),"CD",br(),br(),"EF",br(),"GH",br(),br(),"IJ")
 				),[
-					newBiHrcl(0, [[t("AB")], [t("CD")]],  [[t("EF")],[t("GH")],[br(),t("IJ")]], 11)
+					bi(0, [[t("AB")], [t("CD")]],  [[t("EF")],[t("GH")],[br(),t("IJ")]], 11)
 				]
 			)
 		)
@@ -155,7 +155,7 @@ describe("psToGeneralGen", () => {
 				doc(
 					pAttrs(p("AB",br(),"CD"), attrs0)
 				),[
-					iAttrs(newBiHrcl(0, [[t("AB")]],  [[t("CD")]], 3), attrs0)
+					iAttrs(bi(0, [[t("AB")]],  [[t("CD")]], 3), attrs0)
 				]
 			)
 		)
@@ -178,13 +178,12 @@ describe("psToGeneralGen", () => {
 					p("iii", br()),
 					p("C")
 				),[
-					newBiHrcl(0, [[t("A")]], [], 1),
-					newBiHrcl(0, [[t("B")]], [], 1),
-					// subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 1), 2),
-					newBiHrcl(1, [[t("i")]], [], 2),
-					newBiHrcl(1, [[t("ii")]], [], 1),
-					newBiHrcl(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
-					newBiHrcl(0, [[t("C")]], [], 1)
+					bi(0, [[t("A")]], [], 1),
+					bi(0, [[t("B")]], [], 1),
+					bi(1, [[t("i")]], [], 2),
+					bi(1, [[t("ii")]], [], 1),
+					bi(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(0, [[t("C")]], [], 1)
 				]
 			)
 		)
@@ -198,12 +197,11 @@ describe("psToGeneralGen", () => {
 					p("ii", br()),
 					p("C")
 				),[
-					newBiHrcl(0, [[t("A")]], [], 1),
-					newBiHrcl(0, [[t("B")]], [], 1),
-					// subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 1), 2),
-					newBiHrcl(1, [[t("i")]], [], 2),
-					newBiHrcl(1, [[t("ii")]], [], 2, 1), // TODO no trailingBreaks here?
-					newBiHrcl(0, [[t("C")]], [], 1)
+					bi(0, [[t("A")]], [], 1),
+					bi(0, [[t("B")]], [], 1),
+					bi(1, [[t("i")]], [], 2),
+					bi(1, [[t("ii")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(0, [[t("C")]], [], 1)
 				]
 			)
 		)
@@ -216,10 +214,10 @@ describe("psToGeneralGen", () => {
 					p(br(), "i", br()),
 					p("C")
 				),[
-					newBiHrcl(0, [[t("A")]], [], 1),
-					newBiHrcl(0, [[t("B")]], [], 1),
-					newBiHrcl(1, [[t("i")]], [], 3, 1),
-					newBiHrcl(0, [[t("C")]], [], 1)
+					bi(0, [[t("A")]], [], 1),
+					bi(0, [[t("B")]], [], 1),
+					bi(1, [[t("i")]], [], 3, 1), // TODO no trailingBreaks here?
+					bi(0, [[t("C")]], [], 1)
 				]
 			)
 		)
@@ -236,11 +234,11 @@ describe("psToGeneralGen", () => {
 		// 			p("iii", br()),
 		// 			p("C")
 		// 		),[
-		// 			newBiHrcl(0, [[t("A")]], [], 1),
-		// 			newBiHrcl(0, [[t("B")]], [], 1),
-		// 			subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 1), 2),
-		// 			subBiHrcl(2, newBiHrcl(2, [[t("U")]], [], 1), 2),
-		// 			newBiHrcl(2, [[t("V")]], [], 2, 1), // TODO no trailingBreaks here?
+		// 			bi(0, [[t("A")]], [], 1),
+		// 			bi(0, [[t("B")]], [], 1),
+		// 			subBiHrcl(1, bi(1, [[t("i")]], [], 1), 2),
+		// 			subBiHrcl(2, bi(2, [[t("U")]], [], 1), 2),
+		// 			bi(2, [[t("V")]], [], 2, 1), // TODO no trailingBreaks here?
 		// 			// Problem is the impl creates this instead:
 		// 			// BiHrcl {
 		// 		  //   depth: 2,
@@ -253,9 +251,9 @@ describe("psToGeneralGen", () => {
 		// 		  //   trailingBreaks: 0                                  ?
 		// 		  // },
 		// 			// and all the remaining then are also wrong (or at the wrong level at least)
-		// 			newBiHrcl(1, [[t("ii")]], [], 1),
-		// 			newBiHrcl(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
-		// 			newBiHrcl(0, [[t("C")]], [], 1)
+		// 			bi(1, [[t("ii")]], [], 1),
+		// 			bi(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
+		// 			bi(0, [[t("C")]], [], 1)
 		// 		]
 		// 	)
 		// )
@@ -273,11 +271,11 @@ describe("psToGeneralGen", () => {
 		// 			p("MN",br(),"OP"),
 		// 			p("QRST")
 		// 		),[
-		// 			newBiHrcl(0, [[t("ABCD")]], [], 1),
-		// 			newBiHrcl(0, [[t("EF")]], [[t("GH")]], 3),
-		// 			newBiHrcl(0, [[t("IJKL")]], [], 1),
-		// 			newBiHrcl(0, [[t("MN")]], [[t("OP")]], 3),
-		// 			newBiHrcl(0, [[t("QRST")]], [], 1)
+		// 			bi(0, [[t("ABCD")]], [], 1),
+		// 			bi(0, [[t("EF")]], [[t("GH")]], 3),
+		// 			bi(0, [[t("IJKL")]], [], 1),
+		// 			bi(0, [[t("MN")]], [[t("OP")]], 3),
+		// 			bi(0, [[t("QRST")]], [], 1)
 		// 		]
 		// 	)
 		// )
@@ -293,7 +291,7 @@ describe("psToGeneralGen", () => {
 		// 		doc(
 		// 			p(br(),"AB",br(),"CD")
 		// 		),[
-		// 			newBiHrcl(0, [[br(), t("AB")]],  [[t("CD")]], 4)
+		// 			bi(0, [[br(), t("AB")]],  [[t("CD")]], 4)
 		// 		]
 		// 	)
 		// )
