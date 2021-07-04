@@ -56,7 +56,8 @@ function apply(doc, expectedResult) {
 	// 	for (let i=0;i<actualResult.length;i++) {
 	// 		const act = actualResult[i]
 	// 		const exp = expectedResult[i]
-	// 		console.log(i, act.leading[0], exp.leading[0])
+	// 		console.log(i, 'act', act.leading[0], 'exp', exp.leading[0])
+	// 		// console.log(i, 'act', act.trailing[0], 'exp', exp.trailing[0])
 	// 	}
 	// }
 
@@ -320,13 +321,92 @@ describe("psToGeneralGen", () => {
 
 	describe("in the hierarchical case with separating br not on the highest level", () => {
 
-		// TODO br as separator, double and multiple br cases on intermediate level
+		// br as separator, double and multiple br cases on intermediate level
+
+		it("handles a singel br as separator on a intermediate level", () =>
+			apply(
+				doc(
+					p("A", br(), "a1", br(), "a2"),
+					p(br(), "I", br(), "i1", br(), "i2"),
+					p("II", br(), "ii1", br(), "ii2"),
+					p("III", br(), "iii1", br(), "iii2", br()),
+					p("B", br(), "b1", br(), "b2")
+				),[
+					bi(0, [[t("A")]], [[t("a1")],[t("a2")]], 5),
+					bi(1, [[t("I")]], [[t("i1")],[t("i2")]], 6),
+					bi(1, [[t("II")]], [[t("ii1")],[t("ii2")]], 5),
+					bi(1, [[t("III")]], [[t("iii1")],[t("iii2")]], 6, 1),
+					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
+				]
+			)
+		)
+
+		it("handles two br as separator on a intermediate level", () =>
+			apply(
+				doc(
+					p("A", br(), "a1", br(), "a2"),
+					p(br(), "I-1", br(), "I-2", br(), br(), "i1", br(), "i2"),
+					p("II-1", br(), "II-2", br(), br(), "ii1", br(), "ii2"),
+					p("III-1", br(), "III-2", br(), br(), "iii1", br(), "iii2", br()),
+					p("B", br(), "b1", br(), "b2")
+				),[
+					bi(0, [[t("A")]], [[t("a1")],[t("a2")]], 5),
+					bi(1, [[t("I-1")],[t("I-2")]], [[t("i1")],[t("i2")]], 9),
+					bi(1, [[t("II-1")],[t("II-2")]], [[t("ii1")],[t("ii2")]], 8),
+					bi(1, [[t("III-1")],[t("III-2")]], [[t("iii1")],[t("iii2")]], 9, 1),
+					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
+				]
+			)
+		)
+
+		it("handles multiple br occurrance as separator on a intermediate level", () =>
+			apply(
+				doc(
+					p("A", br(), "a1", br(), "a2"),
+					p(br(), "I-1", br(), "I-2", br(), br(), br(), br(), "i1", br(), "i2"),
+					p("II-1", br(), "II-2", br(), br(), br(), br(), "ii1", br(), "ii2"),
+					p("III-1", br(), "III-2", br(), br(), br(), br(), "iii1", br(), "iii2", br()),
+					p("B", br(), "b1", br(), "b2")
+				),[
+					bi(0, [[t("A")]], [[t("a1")],[t("a2")]], 5),
+					bi(1, [[t("I-1")],[t("I-2")]], [[br(), br(), t("i1")],[t("i2")]], 11),
+					bi(1, [[t("II-1")],[t("II-2")]], [[br(), br(), t("ii1")],[t("ii2")]], 10),
+					bi(1, [[t("III-1")],[t("III-2")]], [[br(), br(), t("iii1")],[t("iii2")]], 11, 1),
+					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
+				]
+			)
+		)
 
 	})
 
 	describe("in the hierarchical case with separating br on the highest level", () => {
 
-		// TODO br as separator, double and multiple br cases on the highest level
+		// br as separator, double and multiple br cases on the highest level
+
+		it("handles a singel br as separator on the highest level", () =>
+			apply(
+				doc(
+					p("A", br(), "a1", br(), "a2"),
+					p(br(), "U", br(), "u1", br(), "u2"),
+					p(br(), "I", br(), "i1", br(), "i2"),
+					p("II", br(), "ii1", br(), "ii2"),
+					p("III", br(), "iii1", br(), "iii2", br()),
+					p("V", br(), "v1", br(), "v2", br()),
+					p("B", br(), "b1", br(), "b2")
+				),[
+					bi(0, [[t("A")]], [[t("a1")],[t("a2")]], 5),
+					bi(1, [[t("U")]], [[t("u1")],[t("u2")]], 6),
+					// TODO The problem is, that in the result each br() becomes a group.
+					bi(2, [[t("I")]], [[t("i1")],[t("i2")]], 6),
+					bi(2, [[t("II")]], [[t("ii1")],[t("ii2")]], 5),
+					bi(2, [[t("III")]], [[t("iii1")],[t("iii2")]], 6, 1),
+					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1),
+					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
+				]
+			)
+		)
+
+		// TODO double and multiple
 
 	})
 
