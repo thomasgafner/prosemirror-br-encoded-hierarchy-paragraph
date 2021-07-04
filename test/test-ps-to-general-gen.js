@@ -220,7 +220,7 @@ describe("psToGeneralGen", () => {
 
 		// TODO change the way the 'nesting' is indicated isOneLevelUp:true instead of sublist:{..}
 
-		// it("can handle more than two levels", () =>
+		// it.only("can handle more than two levels", () =>
 		// 	apply(
 		// 		doc(
 		// 			p("A"),
@@ -236,9 +236,21 @@ describe("psToGeneralGen", () => {
 		// 			newBiHrcl(0, [[t("B")]], [], 1),
 		// 			subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 1), 2),
 		// 			subBiHrcl(2, newBiHrcl(2, [[t("U")]], [], 1), 2),
-		// 			newBiHrcl(2, [[t("V")]], [], 2),
+		// 			newBiHrcl(2, [[t("V")]], [], 2, 1), // TODO no trailingBreaks here?
+		// 			// Problem is the impl creates this instead:
+		// 			// BiHrcl {
+		// 		  //   depth: 2,
+		// 		  //   leading: [ [Array] ],
+		// 		  //   trailing: [ [] ],                                  ?
+		// 		  //   leadingAttrs: [ [Object: null prototype] {} ],
+		// 		  //   trailingAttrs: [ [Object: null prototype] {} ],    ?
+		// 		  //   sublist: null,
+		// 		  //   nofNodes: 2,
+		// 		  //   trailingBreaks: 0                                  ?
+		// 		  // },
+		// 			// and all the remaining then are also wrong (or at the wrong level at least)
 		// 			newBiHrcl(1, [[t("ii")]], [], 1),
-		// 			newBiHrcl(1, [[t("iii")]], [], 2, 1),
+		// 			newBiHrcl(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
 		// 			newBiHrcl(0, [[t("C")]], [], 1)
 		// 		]
 		// 	)
