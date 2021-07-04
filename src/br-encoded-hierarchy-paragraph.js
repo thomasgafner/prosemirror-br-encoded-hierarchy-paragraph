@@ -110,7 +110,7 @@ export function psToGeneralGen(lineBreakType, maxDepth = 3) {
 		let lastRes;
 		const tgtPs = [];
 		ps.forEach(function(p){
-			// console.log('p', p.toString());
+			// console.log('-----', p.toString());
 			const nodes = [];
 			p.forEach(n => nodes.push(n));
 			const depth = lastRes?lastRes.depth-lastRes.trailingBreaks:0;
@@ -120,6 +120,7 @@ export function psToGeneralGen(lineBreakType, maxDepth = 3) {
 			} else {
 				pres = pToGeneralFlat(lineBreakType, nodes, 0, depth);
 			}
+			// console.log('tb', pres.trailingBreaks)
 			pres.setLeadingAttrs(p.attrs)
 			pres.setTrailingAttrs(p.attrs)
 			tgtPs.push(pres);
@@ -222,7 +223,6 @@ function pToGeneralFlat(lineBreakType, nodes, startIndex, depth) {
 	let i=startIndex;
 	while (i<nodes.length) {
 		const node = nodes[i];
-		// console.log('n', node.toString());
 		if (-1 < nofBreak && node.type === lineBreakType) {
 			nofBreak++;
 			if (breakIndex == -1 && nofBreak == 1) {
@@ -237,6 +237,7 @@ function pToGeneralFlat(lineBreakType, nodes, startIndex, depth) {
 		}
 		i++;
 	}
+	// console.log('p flat', depth, hasDoubleBreak?'D':' ', 'b@=', breakIndex)
 	let nbs = [];
 	i = startIndex;
 	while (i<nodes.length) {
@@ -253,7 +254,13 @@ function pToGeneralFlat(lineBreakType, nodes, startIndex, depth) {
 		i++;
 	}
 	// treat remaining nbs as trailing ones
-	trailing.push(nbs);
+	if (0 < nbs.length) {
+		if (breakIndex < 0) {
+			leading.push(nbs);
+		} else {
+			trailing.push(nbs);
+		}
+	}
 
-	return new BiHrcl(depth, leading, trailing, (i - startIndex))
+	return new BiHrcl(depth, leading, trailing, (i - startIndex), nofBreak)
 }

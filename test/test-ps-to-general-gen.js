@@ -5,10 +5,6 @@ const {doc, p, br} = require("./builder")
 const {psToGeneralGen,
 	biHrclEqual, BiHrcl} = require("..") // TODO later from other package
 
-function bi(depth, leading, trailing, nofNodes, trailingBreaks) {
-	return new BiHrcl(depth, leading, trailing, nofNodes, trailingBreaks)
-}
-
 // :: (Node, [BiHrcl])
 function apply(doc, expectedResult) {
 
@@ -18,7 +14,12 @@ function apply(doc, expectedResult) {
 	const psToGeneral = psToGeneralGen(ntps.hard_break, maxDepth)
 	const actualResult = psToGeneral(doc)
 
-	// console.log('res', actualResult)
+	// console.log('res')
+	// actualResult.forEach(function(r, i){console.log(i, r)})
+	// console.log('..')
+	// console.log(4, actualResult[4])
+	// console.log('..')
+
 	// if (0 < actualResult.length) {
 	// 	if (0 < actualResult[0].leading?.length) {
 	// 		console.log('res [0].leading', actualResult[0].leading)
@@ -34,7 +35,8 @@ function apply(doc, expectedResult) {
 	// 	}
 	// }
 
-	// console.log('exp', expectedResult)
+	// console.log('exp')
+	// expectedResult.forEach(function(r, i){console.log(i, r)})
 	// if (0 < expectedResult.length) {
 	// 	if (0 < expectedResult[0].leading?.length) {
 	// 		console.log('exp [0].leading', expectedResult[0].leading)
@@ -50,7 +52,19 @@ function apply(doc, expectedResult) {
 	// 	}
 	// }
 
+	// if (actualResult.length == expectedResult.length) {
+	// 	for (let i=0;i<actualResult.length;i++) {
+	// 		const act = actualResult[i]
+	// 		const exp = expectedResult[i]
+	// 		console.log(i, act.leading[0], exp.leading[0])
+	// 	}
+	// }
+
 	ist(actualResult, expectedResult, biHrclEqual)
+}
+
+function bi(depth, leading, trailing, nofNodes, trailingBreaks) {
+	return new BiHrcl(depth, leading, trailing, nofNodes, trailingBreaks)
 }
 
 function t(str, marks) {
@@ -168,6 +182,8 @@ describe("psToGeneralGen", () => {
 		// Given a leading br the function raises the following groups.
 		// Given a trailing br causes the function to lower the level by one.
 
+		// Test single sublist, not on highest level, of length 1, 2 and 3.
+
 		it("handles a single sublist of three or more groups", () =>
 			apply(
 				doc(
@@ -222,41 +238,80 @@ describe("psToGeneralGen", () => {
 			)
 		)
 
-		// it.only("can handle more than two levels", () =>
-		// 	apply(
-		// 		doc(
-		// 			p("A"),
-		// 			p("B"),
-		// 			p(br(), "i"),
-		// 			p(br(), "U"),
-		// 			p("V", br()),
-		// 			p("ii"),
-		// 			p("iii", br()),
-		// 			p("C")
-		// 		),[
-		// 			bi(0, [[t("A")]], [], 1),
-		// 			bi(0, [[t("B")]], [], 1),
-		// 			subBiHrcl(1, bi(1, [[t("i")]], [], 1), 2),
-		// 			subBiHrcl(2, bi(2, [[t("U")]], [], 1), 2),
-		// 			bi(2, [[t("V")]], [], 2, 1), // TODO no trailingBreaks here?
-		// 			// Problem is the impl creates this instead:
-		// 			// BiHrcl {
-		// 		  //   depth: 2,
-		// 		  //   leading: [ [Array] ],
-		// 		  //   trailing: [ [] ],                                  ?
-		// 		  //   leadingAttrs: [ [Object: null prototype] {} ],
-		// 		  //   trailingAttrs: [ [Object: null prototype] {} ],    ?
-		// 		  //   sublist: null,
-		// 		  //   nofNodes: 2,
-		// 		  //   trailingBreaks: 0                                  ?
-		// 		  // },
-		// 			// and all the remaining then are also wrong (or at the wrong level at least)
-		// 			bi(1, [[t("ii")]], [], 1),
-		// 			bi(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
-		// 			bi(0, [[t("C")]], [], 1)
-		// 		]
-		// 	)
-		// )
+		// Test sublist on highest level of length 1, 2 and 3.
+
+		it("handles a sublist of three or more groups on highest level, when there are more than just two levels", () =>
+			apply(
+				doc(
+					p("A"),
+					p("B"),
+					p(br(), "i"),
+					p(br(), "U"),
+					p("V"),
+					p("W", br()),
+					p("ii"),
+					p("iii", br()),
+					p("C")
+				),[
+					bi(0, [[t("A")]], [], 1),
+					bi(0, [[t("B")]], [], 1),
+					bi(1, [[t("i")]], [], 2),
+					bi(2, [[t("U")]], [], 2),
+					bi(2, [[t("V")]], [], 1),
+					bi(2, [[t("W")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(1, [[t("ii")]], [], 1),
+					bi(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(0, [[t("C")]], [], 1)
+				]
+			)
+		)
+
+		it("handles a sublist of two groups on highest level, when there are more than just two levels", () =>
+			apply(
+				doc(
+					p("A"),
+					p("B"),
+					p(br(), "i"),
+					p(br(), "U"),
+					p("V", br()),
+					p("ii"),
+					p("iii", br()),
+					p("C")
+				),[
+					bi(0, [[t("A")]], [], 1),
+					bi(0, [[t("B")]], [], 1),
+					bi(1, [[t("i")]], [], 2),
+					bi(2, [[t("U")]], [], 2),
+					bi(2, [[t("V")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(1, [[t("ii")]], [], 1),
+					bi(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(0, [[t("C")]], [], 1)
+				]
+			)
+		)
+
+		it("handles a sublist only consisting of just one group on highest level, when there are more than just two levels", () =>
+			apply(
+				doc(
+					p("A"),
+					p("B"),
+					p(br(), "i"),
+					p(br(), "U", br()),
+					p("ii"),
+					p("iii", br()),
+					p("C")
+				),[
+					bi(0, [[t("A")]], [], 1),
+					bi(0, [[t("B")]], [], 1),
+					bi(1, [[t("i")]], [], 2),
+					bi(2, [[t("U")]], [], 3, 1), // TODO no trailingBreaks here?
+					bi(1, [[t("ii")]], [], 1),
+					bi(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(0, [[t("C")]], [], 1)
+				]
+			)
+		)
+
 
 		// TODO
 
