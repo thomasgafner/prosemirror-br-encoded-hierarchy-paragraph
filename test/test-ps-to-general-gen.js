@@ -176,11 +176,11 @@ describe("psToGeneralGen", () => {
 
 	})
 
-	describe("in the hierarchical cases", () => {
+	// Tests where brs are at the beginning and at the end to control hierarchy.
+	// Given a leading br the function raises the following groups.
+	// Given a trailing br causes the function to lower the level by one.
 
-		// Tests where brs are at the beginning and at the end to control hierarchy.
-		// Given a leading br the function raises the following groups.
-		// Given a trailing br causes the function to lower the level by one.
+	describe("in the hierarchical case with a single sublist not on the highest level", () => {
 
 		// Test single sublist, not on highest level, of length 1, 2 and 3.
 
@@ -238,7 +238,11 @@ describe("psToGeneralGen", () => {
 			)
 		)
 
-		// Test sublist on highest level of length 1, 2 and 3.
+	})
+
+	describe("in the hierarchical case with a sublist on the highest level", () => {
+
+		// Test single sublist on the highest level of length 1, 2 and 3.
 
 		it("handles a sublist of three or more groups on highest level, when there are more than just two levels", () =>
 			apply(
@@ -312,29 +316,23 @@ describe("psToGeneralGen", () => {
 			)
 		)
 
+	})
 
-		// TODO
+	describe("in the hierarchical case with separating br not on the highest level", () => {
 
+		// TODO br as separator, double and multiple br cases on intermediate level
 
-		// TODO
-		// it("splits one leading and one trailing nodes group if one paragraph is present", () =>
-		// 	apply(
-		// 		doc(
-		// 			p("ABCD"),
-		// 			p("EF",br(),"GH"),
-		// 			p("IJKL"),
-		// 			p("MN",br(),"OP"),
-		// 			p("QRST")
-		// 		),[
-		// 			bi(0, [[t("ABCD")]], [], 1),
-		// 			bi(0, [[t("EF")]], [[t("GH")]], 3),
-		// 			bi(0, [[t("IJKL")]], [], 1),
-		// 			bi(0, [[t("MN")]], [[t("OP")]], 3),
-		// 			bi(0, [[t("QRST")]], [], 1)
-		// 		]
-		// 	)
-		// )
+	})
 
+	describe("in the hierarchical case with separating br on the highest level", () => {
+
+		// TODO br as separator, double and multiple br cases on the highest level
+
+	})
+
+	describe("in the hierarchical case with attributes intermediate and highest level", () => {
+
+		// TODO attrs on intermediate and highest level
 
 	})
 
