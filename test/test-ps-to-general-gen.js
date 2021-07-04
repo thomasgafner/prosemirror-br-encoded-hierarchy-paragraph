@@ -3,7 +3,11 @@ const {Slice, Fragment} = require("prosemirror-model")
 const ist = require("ist")
 const {doc, p, br} = require("./builder")
 const {psToGeneralGen,
-	biHrclEqual, newBiHrcl, subBiHrcl} = require("..") // TODO later from other package
+	biHrclEqual, BiHrcl} = require("..") // TODO later from other package
+
+function newBiHrcl(depth, leading, trailing, nofNodes, trailingBreaks) {
+	return new BiHrcl(depth, leading, trailing, nofNodes, trailingBreaks)
+}
 
 // :: (Node, [BiHrcl])
 function apply(doc, expectedResult) {
@@ -176,7 +180,8 @@ describe("psToGeneralGen", () => {
 				),[
 					newBiHrcl(0, [[t("A")]], [], 1),
 					newBiHrcl(0, [[t("B")]], [], 1),
-					subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 1), 2),
+					// subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 1), 2),
+					newBiHrcl(1, [[t("i")]], [], 2),
 					newBiHrcl(1, [[t("ii")]], [], 1),
 					newBiHrcl(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
 					newBiHrcl(0, [[t("C")]], [], 1)
@@ -195,7 +200,8 @@ describe("psToGeneralGen", () => {
 				),[
 					newBiHrcl(0, [[t("A")]], [], 1),
 					newBiHrcl(0, [[t("B")]], [], 1),
-					subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 1), 2),
+					// subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 1), 2),
+					newBiHrcl(1, [[t("i")]], [], 2),
 					newBiHrcl(1, [[t("ii")]], [], 2, 1), // TODO no trailingBreaks here?
 					newBiHrcl(0, [[t("C")]], [], 1)
 				]
@@ -212,13 +218,11 @@ describe("psToGeneralGen", () => {
 				),[
 					newBiHrcl(0, [[t("A")]], [], 1),
 					newBiHrcl(0, [[t("B")]], [], 1),
-					subBiHrcl(1, newBiHrcl(1, [[t("i")]], [], 2, 1), 3),
+					newBiHrcl(1, [[t("i")]], [], 3, 1),
 					newBiHrcl(0, [[t("C")]], [], 1)
 				]
 			)
 		)
-
-		// TODO change the way the 'nesting' is indicated isOneLevelUp:true instead of sublist:{..}
 
 		// it.only("can handle more than two levels", () =>
 		// 	apply(

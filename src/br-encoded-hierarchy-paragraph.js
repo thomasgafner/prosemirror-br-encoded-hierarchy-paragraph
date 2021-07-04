@@ -1,6 +1,6 @@
 
 // TODO General hierarchical structure as a class ? (in that package the concept could be explained)
-// TODO later move BiHrcl resp. newBiHrcl and subBiHrcl to other package
+// TODO later move BiHrcl resp. biHrclEqual to other package
 
 const compNodes = function(as, bs) {
 	if (as.length != bs.length) return false
@@ -36,16 +36,15 @@ const compAttrsArray = function(as, bs) {
 }
 
 // ::- Hierarchical info of elements wit h two parts.
-class BiHrcl {
-  // :: (int, [[Node]], [[Node]], [BiHrcl], int, int)
+export class BiHrcl {
+  // :: (int, [[Node]], [[Node]], int, int)
   // Create a hierarchical info.
-  constructor(depth, leading, trailing, sublist, nofNodes, trailingBreaks) {
+  constructor(depth, leading, trailing, nofNodes, trailingBreaks = 0) {
     this.depth = depth
 		this.leading = leading
 		this.trailing = trailing
 		this.setLeadingAttrs(Object.create(null))
 		this.setTrailingAttrs(Object.create(null))
-		this.sublist = sublist
 		this.nofNodes = nofNodes
 		this.trailingBreaks = trailingBreaks
   }
@@ -70,7 +69,6 @@ class BiHrcl {
   // Test whether two hierarchical info objects are the same.
   eq(othr) {
 		if (this.depth != othr.depth) return false
-		if (!!this.sublist != !!othr.sublist) return false
 		if (!!this.leading != !!othr.leading) return false
 		if (!!this.trailing != !!othr.trailing) return false
 		if (this.nofNodes != othr.nofNodes) return false
@@ -90,19 +88,8 @@ class BiHrcl {
 		// individual for each group, because they originate either from a dt or dd.
 		if (!compAttrsArray(this.leadingAttrs, othr.leadingAttrs)) return false
 		if (!compAttrsArray(this.trailingAttrs, othr.trailingAttrs)) return false
-		if(this.sublist) {
-			return biHrclEqual(this.sublist, othr.sublist)
-		}
 		return true
   }
-}
-
-export function newBiHrcl(depth, leading, trailing, nofNodes, trailingBreaks = 0) {
-	return new BiHrcl(depth, leading, trailing, null, nofNodes, trailingBreaks)
-}
-
-export function subBiHrcl(depth, sublist, nofNodes, trailingBreaks = 0) {
-	return new BiHrcl(depth, null, null, sublist, nofNodes, trailingBreaks)
 }
 
 export function biHrclEqual(a, b) {
@@ -126,9 +113,6 @@ export function psToGeneralGen(lineBreakType, maxDepth = 3) {
 			// console.log('p', p.toString());
 			const nodes = [];
 			p.forEach(n => nodes.push(n));
-			if (lastRes && lastRes.sublist) {
-				lastRes = lastRes.sublist
-			}
 			const depth = lastRes?lastRes.depth-lastRes.trailingBreaks:0;
 			let pres;
 			if (depth < maxDepth -1) {
@@ -181,12 +165,8 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth) {
 					resTrailing = pToGeneralFlat(lineBreakType, nodes, i+1, depth+1);
 				}
 				// console.log('resTrailing', resTrailing);
-				if (resTrailing.sublist) {
-					resTrailing.nofNodes++;
-					return resTrailing;
-				} else {
-					return subBiHrcl(depth+1, resTrailing, resTrailing.nofNodes+1)
-				}
+				resTrailing.nofNodes++
+				return resTrailing
 			} // all other breaks are just counted
 			if (nofBreak == 1) {
 				if (doubleBreakOnce == false) {
@@ -214,7 +194,7 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth) {
 	const leading = src.leading;
 	const trailing = src.trailing;
 
-	return newBiHrcl(depth, leading, trailing, (i - startIndex), nofBreak )
+	return new BiHrcl(depth, leading, trailing, (i - startIndex), nofBreak)
 }
 
 function treatNbs(nbs, doubleBreakOnce, onlyOneLeadingResult, severalLeadingResult) {
@@ -275,5 +255,5 @@ function pToGeneralFlat(lineBreakType, nodes, startIndex, depth) {
 	// treat remaining nbs as trailing ones
 	trailing.push(nbs);
 
-	return newBiHrcl(depth, leading, trailing, (i - startIndex))
+	return new BiHrcl(depth, leading, trailing, (i - startIndex))
 }
