@@ -6,10 +6,9 @@ const {psToGeneralGen,
 	biHrclEqual, BiHrcl} = require("..") // TODO later from other package
 
 // :: (Node, [BiHrcl])
-function apply(doc, expectedResult) {
+function apply(doc, expectedResult, maxDepth = 3) {
 
 	const ntps = doc.type.schema.nodes
-	const maxDepth = 3
 
 	const psToGeneral = psToGeneralGen(ntps.hard_break, maxDepth)
 	const actualResult = psToGeneral(doc)
@@ -27,12 +26,12 @@ function apply(doc, expectedResult) {
 	// 	if (0 < actualResult[0].trailing?.length) {
 	// 		console.log('res [0].trailing', actualResult[0].trailing)
 	// 	}
-	// 	if (0 < actualResult[0].leadingAttrs?.length) {
-	// 		console.log('res [0].leadingAttrs', actualResult[0].leadingAttrs)
-	// 	}
-	// 	if (0 < actualResult[0].trailingAttrs?.length) {
-	// 		console.log('res [0].trailingAttrs', actualResult[0].trailingAttrs)
-	// 	}
+	// 	// if (0 < actualResult[0].leadingAttrs?.length) {
+	// 	// 	console.log('res [0].leadingAttrs', actualResult[0].leadingAttrs)
+	// 	// }
+	// 	// if (0 < actualResult[0].trailingAttrs?.length) {
+	// 	// 	console.log('res [0].trailingAttrs', actualResult[0].trailingAttrs)
+	// 	// }
 	// }
 
 	// console.log('exp')
@@ -335,7 +334,7 @@ describe("psToGeneralGen", () => {
 					bi(0, [[t("A")]], [[t("a1")],[t("a2")]], 5),
 					bi(1, [[t("I")]], [[t("i1")],[t("i2")]], 6),
 					bi(1, [[t("II")]], [[t("ii1")],[t("ii2")]], 5),
-					bi(1, [[t("III")]], [[t("iii1")],[t("iii2")]], 6, 1),
+					bi(1, [[t("III")]], [[t("iii1")],[t("iii2")]], 6, 1), // TODO
 					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
 				]
 			)
@@ -353,7 +352,7 @@ describe("psToGeneralGen", () => {
 					bi(0, [[t("A")]], [[t("a1")],[t("a2")]], 5),
 					bi(1, [[t("I-1")],[t("I-2")]], [[t("i1")],[t("i2")]], 9),
 					bi(1, [[t("II-1")],[t("II-2")]], [[t("ii1")],[t("ii2")]], 8),
-					bi(1, [[t("III-1")],[t("III-2")]], [[t("iii1")],[t("iii2")]], 9, 1),
+					bi(1, [[t("III-1")],[t("III-2")]], [[t("iii1")],[t("iii2")]], 9, 1), // TODO
 					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
 				]
 			)
@@ -371,7 +370,7 @@ describe("psToGeneralGen", () => {
 					bi(0, [[t("A")]], [[t("a1")],[t("a2")]], 5),
 					bi(1, [[t("I-1")],[t("I-2")]], [[br(), br(), t("i1")],[t("i2")]], 11),
 					bi(1, [[t("II-1")],[t("II-2")]], [[br(), br(), t("ii1")],[t("ii2")]], 10),
-					bi(1, [[t("III-1")],[t("III-2")]], [[br(), br(), t("iii1")],[t("iii2")]], 11, 1),
+					bi(1, [[t("III-1")],[t("III-2")]], [[br(), br(), t("iii1")],[t("iii2")]], 11, 1), // TODO
 					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
 				]
 			)
@@ -398,8 +397,8 @@ describe("psToGeneralGen", () => {
 					bi(1, [[t("U")]], [[t("u1")],[t("u2")]], 6),
 					bi(2, [[t("I")]], [[t("i1")],[t("i2")]], 6),
 					bi(2, [[t("II")]], [[t("ii1")],[t("ii2")]], 5),
-					bi(2, [[t("III")]], [[t("iii1")],[t("iii2")]], 6, 1),
-					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1),
+					bi(2, [[t("III")]], [[t("iii1")],[t("iii2")]], 6, 1), // TODO
+					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1), // TODO
 					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
 				]
 			)
@@ -420,8 +419,8 @@ describe("psToGeneralGen", () => {
 					bi(1, [[t("U")]], [[t("u1")],[t("u2")]], 6),
 					bi(2, [[t("I-1")],[t("I-2")]], [[t("i1")],[t("i2")]], 9),
 					bi(2, [[t("II-1")],[t("II-2")]], [[t("ii1")],[t("ii2")]], 8),
-					bi(2, [[t("III-1")],[t("III-2")]], [[t("iii1")],[t("iii2")]], 9, 1),
-					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1),
+					bi(2, [[t("III-1")],[t("III-2")]], [[t("iii1")],[t("iii2")]], 9, 1), // TODO
+					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1), // TODO
 					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
 				]
 			)
@@ -442,8 +441,8 @@ describe("psToGeneralGen", () => {
 					bi(1, [[t("U")]], [[t("u1")],[t("u2")]], 6),
 					bi(2, [[t("I-1")],[t("I-2")]], [[br(), br(), t("i1")],[t("i2")]], 11),
 					bi(2, [[t("II-1")],[t("II-2")]], [[br(), br(), t("ii1")],[t("ii2")]], 10),
-					bi(2, [[t("III-1")],[t("III-2")]], [[br(), br(), t("iii1")],[t("iii2")]], 11, 1),
-					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1),
+					bi(2, [[t("III-1")],[t("III-2")]], [[br(), br(), t("iii1")],[t("iii2")]], 11, 1), // TODO
+					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1), // TODO
 					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
 				]
 			)
@@ -463,7 +462,7 @@ describe("psToGeneralGen", () => {
 					p("B")
 				),[
 					bi(0, [[t("A")]], [], 1),
-					iAttrs(bi(1, [[t("I")]],  [[t("i")]], 5, 1), attrs0),
+					iAttrs(bi(1, [[t("I")]],  [[t("i")]], 5, 1), attrs0), // TODO
 					bi(0, [[t("B")]], [], 1),
 				]
 			)
@@ -480,8 +479,8 @@ describe("psToGeneralGen", () => {
 				),[
 					bi(0, [[t("A")]], [], 1),
 					bi(1, [[t("U")]], [], 2),
-					iAttrs(bi(2, [[t("I")]],  [[t("i")]], 5, 1), attrs0),
-					bi(1, [[t("V")]], [], 2, 1),
+					iAttrs(bi(2, [[t("I")]],  [[t("i")]], 5, 1), attrs0), // TODO
+					bi(1, [[t("V")]], [], 2, 1), // TODO
 					bi(0, [[t("B")]], [], 1),
 				]
 			)
@@ -489,10 +488,75 @@ describe("psToGeneralGen", () => {
 
 	})
 
+	describe("in hierarchical cases with steps larger than one level", () => {
+
+		it("handles a single sublist of level three", () =>
+			apply(
+				doc(
+					p("A"),
+					p("B"),
+					p(br(), br(), br(), "i"),
+					p("ii"),
+					p("iii", br(), br(), br()),
+					p("C")
+				),[
+					bi(0, [[t("A")]], [], 1),
+					bi(0, [[t("B")]], [], 1),
+					bi(3, [[t("i")]], [], 4),
+					bi(3, [[t("ii")]], [], 1),
+					bi(3, [[t("iii")]], [], 4, 3), // TODO no trailingBreaks here?
+					bi(0, [[t("C")]], [], 1)
+				],
+				5 // max levels
+			)
+		)
+
+		it("handles a sublist, that only consists of just one group on highest level, when the level goes from second to highest and immediately back to second", () =>
+			apply(
+				doc(
+					p("A"),
+					p(br(), "i"),
+					p(br(), br(), br(), "U", br(), br(), br()),
+					p("ii", br()),
+					p("B")
+				),[
+					bi(0, [[t("A")]], [], 1),
+					bi(1, [[t("i")]], [], 2),
+					bi(4, [[t("U")]], [], 7, 3), // TODO no trailingBreaks here?
+					bi(1, [[t("ii")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(0, [[t("B")]], [], 1)
+				],
+				5 // max levels
+			)
+		)
+
+	})
+
 	describe("in pathological hierarchical cases", () => {
 
+		// TODO
+		// it("treats trailing br in the lowest level as content", () =>
+		// 	apply(
+		// 		doc(
+		// 			p("AB",br(),"CD", br())
+		// 		),[
+		// 			bi(0, [[t("AB")]],  [[t("CD"), br()]], 4) // br is content
+		// 		]
+		// 	)
+		// )
+
+		// TODO it("treats additional trailing br in higher level as content", () =>
+		// 	apply(
+		// 		doc(
+		// 			p("AB",br(),"CD", br())
+		// 		),[
+		// 			bi(0, [[t("AB")]],  [[t("CD")]], 4, 1) // TODO
+		// 		]
+		// 	)
+		// )
+
 		// TODO test br at the beginning but level is 0 - what happens?
-		// it.only("a leading br in the first level shows no effect", () =>
+		// it.only("treats leading br in the first level as content", () =>
 		// 	apply(
 		// 		doc(
 		// 			p(br(),"AB",br(),"CD")
