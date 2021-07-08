@@ -198,7 +198,7 @@ describe("psToGeneralGen", () => {
 					bi(0, [[t("B")]], [], 1),
 					bi(1, [[t("i")]], [], 2),
 					bi(1, [[t("ii")]], [], 1),
-					bi(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(1, [[t("iii")]], [], 2, 1),
 					bi(0, [[t("C")]], [], 1)
 				]
 			)
@@ -216,7 +216,7 @@ describe("psToGeneralGen", () => {
 					bi(0, [[t("A")]], [], 1),
 					bi(0, [[t("B")]], [], 1),
 					bi(1, [[t("i")]], [], 2),
-					bi(1, [[t("ii")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(1, [[t("ii")]], [], 2, 1),
 					bi(0, [[t("C")]], [], 1)
 				]
 			)
@@ -232,7 +232,7 @@ describe("psToGeneralGen", () => {
 				),[
 					bi(0, [[t("A")]], [], 1),
 					bi(0, [[t("B")]], [], 1),
-					bi(1, [[t("i")]], [], 3, 1), // TODO no trailingBreaks here?
+					bi(1, [[t("i")]], [], 3, 1),
 					bi(0, [[t("C")]], [], 1)
 				]
 			)
@@ -262,9 +262,9 @@ describe("psToGeneralGen", () => {
 					bi(1, [[t("i")]], [], 2),
 					bi(2, [[t("U")]], [], 2),
 					bi(2, [[t("V")]], [], 1),
-					bi(2, [[t("W")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(2, [[t("W")]], [], 2, 1),
 					bi(1, [[t("ii")]], [], 1),
-					bi(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(1, [[t("iii")]], [], 2, 1),
 					bi(0, [[t("C")]], [], 1)
 				]
 			)
@@ -286,9 +286,9 @@ describe("psToGeneralGen", () => {
 					bi(0, [[t("B")]], [], 1),
 					bi(1, [[t("i")]], [], 2),
 					bi(2, [[t("U")]], [], 2),
-					bi(2, [[t("V")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(2, [[t("V")]], [], 2, 1),
 					bi(1, [[t("ii")]], [], 1),
-					bi(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(1, [[t("iii")]], [], 2, 1),
 					bi(0, [[t("C")]], [], 1)
 				]
 			)
@@ -308,9 +308,9 @@ describe("psToGeneralGen", () => {
 					bi(0, [[t("A")]], [], 1),
 					bi(0, [[t("B")]], [], 1),
 					bi(1, [[t("i")]], [], 2),
-					bi(2, [[t("U")]], [], 3, 1), // TODO no trailingBreaks here?
+					bi(2, [[t("U")]], [], 3, 1),
 					bi(1, [[t("ii")]], [], 1),
-					bi(1, [[t("iii")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(1, [[t("iii")]], [], 2, 1),
 					bi(0, [[t("C")]], [], 1)
 				]
 			)
@@ -334,7 +334,7 @@ describe("psToGeneralGen", () => {
 					bi(0, [[t("A")]], [[t("a1")],[t("a2")]], 5),
 					bi(1, [[t("I")]], [[t("i1")],[t("i2")]], 6),
 					bi(1, [[t("II")]], [[t("ii1")],[t("ii2")]], 5),
-					bi(1, [[t("III")]], [[t("iii1")],[t("iii2")]], 6, 1), // TODO
+					bi(1, [[t("III")]], [[t("iii1")],[t("iii2")]], 6, 1),
 					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
 				]
 			)
@@ -352,7 +352,7 @@ describe("psToGeneralGen", () => {
 					bi(0, [[t("A")]], [[t("a1")],[t("a2")]], 5),
 					bi(1, [[t("I-1")],[t("I-2")]], [[t("i1")],[t("i2")]], 9),
 					bi(1, [[t("II-1")],[t("II-2")]], [[t("ii1")],[t("ii2")]], 8),
-					bi(1, [[t("III-1")],[t("III-2")]], [[t("iii1")],[t("iii2")]], 9, 1), // TODO
+					bi(1, [[t("III-1")],[t("III-2")]], [[t("iii1")],[t("iii2")]], 9, 1),
 					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
 				]
 			)
@@ -370,7 +370,7 @@ describe("psToGeneralGen", () => {
 					bi(0, [[t("A")]], [[t("a1")],[t("a2")]], 5),
 					bi(1, [[t("I-1")],[t("I-2")]], [[br(), br(), t("i1")],[t("i2")]], 11),
 					bi(1, [[t("II-1")],[t("II-2")]], [[br(), br(), t("ii1")],[t("ii2")]], 10),
-					bi(1, [[t("III-1")],[t("III-2")]], [[br(), br(), t("iii1")],[t("iii2")]], 11, 1), // TODO
+					bi(1, [[t("III-1")],[t("III-2")]], [[br(), br(), t("iii1")],[t("iii2")]], 11, 1),
 					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
 				]
 			)
@@ -397,8 +397,8 @@ describe("psToGeneralGen", () => {
 					bi(1, [[t("U")]], [[t("u1")],[t("u2")]], 6),
 					bi(2, [[t("I")]], [[t("i1")],[t("i2")]], 6),
 					bi(2, [[t("II")]], [[t("ii1")],[t("ii2")]], 5),
-					bi(2, [[t("III")]], [[t("iii1")],[t("iii2")]], 6, 1), // TODO
-					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1), // TODO
+					bi(2, [[t("III")]], [[t("iii1")],[t("iii2")]], 6, 1),
+					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1),
 					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
 				]
 			)
@@ -419,8 +419,8 @@ describe("psToGeneralGen", () => {
 					bi(1, [[t("U")]], [[t("u1")],[t("u2")]], 6),
 					bi(2, [[t("I-1")],[t("I-2")]], [[t("i1")],[t("i2")]], 9),
 					bi(2, [[t("II-1")],[t("II-2")]], [[t("ii1")],[t("ii2")]], 8),
-					bi(2, [[t("III-1")],[t("III-2")]], [[t("iii1")],[t("iii2")]], 9, 1), // TODO
-					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1), // TODO
+					bi(2, [[t("III-1")],[t("III-2")]], [[t("iii1")],[t("iii2")]], 9, 1),
+					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1),
 					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
 				]
 			)
@@ -441,8 +441,8 @@ describe("psToGeneralGen", () => {
 					bi(1, [[t("U")]], [[t("u1")],[t("u2")]], 6),
 					bi(2, [[t("I-1")],[t("I-2")]], [[br(), br(), t("i1")],[t("i2")]], 11),
 					bi(2, [[t("II-1")],[t("II-2")]], [[br(), br(), t("ii1")],[t("ii2")]], 10),
-					bi(2, [[t("III-1")],[t("III-2")]], [[br(), br(), t("iii1")],[t("iii2")]], 11, 1), // TODO
-					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1), // TODO
+					bi(2, [[t("III-1")],[t("III-2")]], [[br(), br(), t("iii1")],[t("iii2")]], 11, 1),
+					bi(1, [[t("V")]], [[t("v1")],[t("v2")]], 6, 1),
 					bi(0, [[t("B")]], [[t("b1")],[t("b2")]], 5)
 				]
 			)
@@ -462,7 +462,7 @@ describe("psToGeneralGen", () => {
 					p("B")
 				),[
 					bi(0, [[t("A")]], [], 1),
-					iAttrs(bi(1, [[t("I")]],  [[t("i")]], 5, 1), attrs0), // TODO
+					iAttrs(bi(1, [[t("I")]],  [[t("i")]], 5, 1), attrs0),
 					bi(0, [[t("B")]], [], 1),
 				]
 			)
@@ -479,8 +479,8 @@ describe("psToGeneralGen", () => {
 				),[
 					bi(0, [[t("A")]], [], 1),
 					bi(1, [[t("U")]], [], 2),
-					iAttrs(bi(2, [[t("I")]],  [[t("i")]], 5, 1), attrs0), // TODO
-					bi(1, [[t("V")]], [], 2, 1), // TODO
+					iAttrs(bi(2, [[t("I")]],  [[t("i")]], 5, 1), attrs0),
+					bi(1, [[t("V")]], [], 2, 1),
 					bi(0, [[t("B")]], [], 1),
 				]
 			)
@@ -504,7 +504,7 @@ describe("psToGeneralGen", () => {
 					bi(0, [[t("B")]], [], 1),
 					bi(3, [[t("i")]], [], 4),
 					bi(3, [[t("ii")]], [], 1),
-					bi(3, [[t("iii")]], [], 4, 3), // TODO no trailingBreaks here?
+					bi(3, [[t("iii")]], [], 4, 3),
 					bi(0, [[t("C")]], [], 1)
 				],
 				5 // max levels
@@ -522,8 +522,8 @@ describe("psToGeneralGen", () => {
 				),[
 					bi(0, [[t("A")]], [], 1),
 					bi(1, [[t("i")]], [], 2),
-					bi(4, [[t("U")]], [], 7, 3), // TODO no trailingBreaks here?
-					bi(1, [[t("ii")]], [], 2, 1), // TODO no trailingBreaks here?
+					bi(4, [[t("U")]], [], 7, 3),
+					bi(1, [[t("ii")]], [], 2, 1),
 					bi(0, [[t("B")]], [], 1)
 				],
 				5 // max levels
@@ -534,26 +534,31 @@ describe("psToGeneralGen", () => {
 
 	describe("in pathological hierarchical cases", () => {
 
-		// TODO
-		// it("treats trailing br in the lowest level as content", () =>
-		// 	apply(
-		// 		doc(
-		// 			p("AB",br(),"CD", br())
-		// 		),[
-		// 			bi(0, [[t("AB")]],  [[t("CD"), br()]], 4) // br is content
-		// 		]
-		// 	)
-		// )
+		it("treats trailing br in the lowest level as content", () =>
+			apply(
+				doc(
+					p("AB",br(),"CD", br())
+				),[
+					bi(0, [[t("AB")]],  [[t("CD"), br()]], 4) // br is content
+				]
+			)
+		)
 
-		// TODO it("treats additional trailing br in higher level as content", () =>
-		// 	apply(
-		// 		doc(
-		// 			p("AB",br(),"CD", br())
-		// 		),[
-		// 			bi(0, [[t("AB")]],  [[t("CD")]], 4, 1) // TODO
-		// 		]
-		// 	)
-		// )
+		it("treats additional trailing br in higher level as content", () =>
+			apply(
+				doc(
+					p("A"),
+					p(br(), "i"),
+					p(br(), "U", br(), br(), "u", br(), br(), br()),
+					p("B")
+				),[
+					bi(0, [[t("A")]], [], 1),
+					bi(1, [[t("i")]], [], 2),
+					bi(2, [[t("U")]], [[t("u"), br()]], 8, 2), // one br is content but the others are not
+					bi(0, [[t("B")]], [], 1)
+				]
+			)
+		)
 
 		// TODO test br at the beginning but level is 0 - what happens?
 		// it.only("treats leading br in the first level as content", () =>

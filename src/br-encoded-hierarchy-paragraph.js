@@ -36,17 +36,24 @@ const compAttrsArray = function(as, bs) {
 	return true
 }
 
-// ::- Hierarchical info of elements wit h two parts.
+// ::- Hierarchical info of elements with two parts.
 export class BiHrcl {
   // :: (int, [[Node]], [[Node]], int, int)
   // Create a hierarchical info.
   constructor(depth, leading, trailing, nofNodes, trailingBreaks = 0) {
+		// :: int
+	  // Number of the level
     this.depth = depth
 		this.leading = leading
 		this.trailing = trailing
 		this.setLeadingAttrs(Object.create(null))
 		this.setTrailingAttrs(Object.create(null))
+		// :: int
+	  // Original number of nodes including the omitted ones for raising and lowering
+		// level(s) and the one or two for separating leading and trailing part
 		this.nofNodes = nofNodes
+		// :: int
+	  // Number of trailing breaks omitted for lowering level(s)
 		this.trailingBreaks = trailingBreaks
   }
 
@@ -140,6 +147,7 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth, doNotRecu
 	const onlyOneLeadingResult = {leading:[], trailing:[]};
 	const severalLeadingResult = {leading:[], trailing:[]};
 	let nbs = [];
+	let lastNbs; // undefined
 	let nofBreak = 0;
 	let doubleBreakOnce = false;
 	let isFirstDoubleBreak = false;
@@ -179,9 +187,18 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth, doNotRecu
 				}
 			}
 			nofBreak++;
+			if (0 < nbs.length) {
+				lastNbs = nbs;
+			}
 			nbs = [];
 		}
 		i++;
+	}
+
+	// console.log('nofBreak', nofBreak, 'on level', depth)
+	while (depth < nofBreak) {
+		lastNbs.push(lastBrNode)
+		nofBreak--
 	}
 
 	// treat remaining nbs (trailing ones most of the time)
