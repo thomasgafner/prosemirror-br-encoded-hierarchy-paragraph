@@ -1,6 +1,7 @@
 
 // TODO General hierarchical structure as a class ? (in that package the concept could be explained)
 // TODO later move BiHrcl resp. biHrclEqual to other package
+// TODO conceptual: trailingBreaks = any or only br that should be in the content but are not? (see tests)
 
 const compNodes = function(as, bs) {
 	if (as.length != bs.length) return false
@@ -162,11 +163,6 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth, doNotRecu
 				// do recurse
 				let resTrailing;
 				// console.log('rr', depth)
-				// if (depth + 1 < maxDepth - 1) {
-				// 	resTrailing = pToGeneral(lineBreakType, maxDepth, nodes, i+1, depth+1);
-				// } else {
-				// 	resTrailing = pToGeneralFlat(lineBreakType, nodes, i+1, depth+1);
-				// }
 				const dnr = (depth + 1 < maxDepth - 1) == false
 				resTrailing = pToGeneral(lineBreakType, maxDepth, nodes, i+1, depth+1, dnr);
 				// console.log('resTrailing', resTrailing);
