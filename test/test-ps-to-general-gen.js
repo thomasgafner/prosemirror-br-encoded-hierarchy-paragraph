@@ -544,7 +544,7 @@ describe("psToGeneralGen", () => {
 			)
 		)
 
-		it("treats additional trailing br in higher level as content", () =>
+		it("treats too many trailing br in higher level as content", () =>
 			apply(
 				doc(
 					p("A"),
@@ -560,19 +560,37 @@ describe("psToGeneralGen", () => {
 			)
 		)
 
-		// TODO test br at the beginning but level is 0 - what happens?
-		// it.only("treats leading br in the first level as content", () =>
-		// 	apply(
-		// 		doc(
-		// 			p(br(),"AB",br(),"CD")
-		// 		),[
-		// 			bi(0, [[br(), t("AB")]],  [[t("CD")]], 4)
-		// 		]
-		// 	)
-		// )
+		it("treats a leading br on the highest level as content", () =>
+			apply(
+				doc(
+					p("A"),
+					p(br(), "i"),
+					p(br(), "U"),
+					p(br(), "eee"),
+					p("V", br()),
+					p("ii", br()),
+					p("B")
+				),[
+					bi(0, [[t("A")]], [], 1),
+					bi(1, [[t("i")]], [], 2),
+					bi(2, [[t("U")]], [], 2),
+					bi(2, [[br(), t("eee")]], [], 2),
+					bi(2, [[t("V")]], [], 2, 1),
+					bi(1, [[t("ii")]], [], 2, 1),
+					bi(0, [[t("B")]], [], 1)
+				]
+			)
+		)
 
-		// TODO test br at the end of the last one - what happens?
-		// TODO test / concept really many br at the beginning or the end - what happens?
+		it("treats too many leading br in the lowest level as content", () =>
+			apply(
+				doc(
+					p(br(), br(), br(), br(), "AB",br(),"CD")
+				),[
+					bi(2, [[br(), br(), t("AB")]], [[t("CD")]], 7) // br are content
+				]
+			)
+		)
 
 	})
 

@@ -153,19 +153,26 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth, doNotRecu
 	let isFirstDoubleBreak = false;
 	let i=startIndex;
 	let lastBrNode; // undefined
+	let nofLeadingContentBr = 0
 	while (i<nodes.length) {
 		const node = nodes[i];
 		// console.log('n', node.toString());
 		if (node.type !== lineBreakType) {
-			// prepend remainding brs
-			// console.log('nofBreak', isFirstDoubleBreak?'f':' ', nofBreak)
-			for (let i=isFirstDoubleBreak?2:1;i<nofBreak;i++) nbs.push(lastBrNode)
+			if (0 < onlyOneLeadingResult.leading.length) {
+				// prepend remainding brs
+				// console.log('nofBreak', isFirstDoubleBreak?'f':' ', nofBreak)
+				for (let i=isFirstDoubleBreak?2:1;i<nofBreak;i++) nbs.push(lastBrNode)
+			}
 			nbs.push(node);
 			nofBreak = 0;
 		} else { // line break
 			lastBrNode = node
 			// console.log('lb:', doubleBreakOnce?'D':' ', 'b=', nofBreak, 'n=', nbs.length)
+			// console.log('doNotRecur', doNotRecur)
 			if (0 < nbs.length || doNotRecur) {
+				if (onlyOneLeadingResult.leading.length == 0 && nbs.length == 0) {
+					nofLeadingContentBr++
+				}
 				treatNbs(nbs, doubleBreakOnce, onlyOneLeadingResult, severalLeadingResult);
 			} else if (onlyOneLeadingResult.leading.length == 0) { // leading line break
 				// do recurse
@@ -177,7 +184,7 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth, doNotRecu
 				resTrailing.nofNodes++
 				return resTrailing
 			} // all other breaks are just counted
-			if (nofBreak == 1) {
+			if (nofBreak == 1 && 0 < onlyOneLeadingResult.leading.length) {
 				if (doubleBreakOnce == false) {
 					doubleBreakOnce = true;
 					isFirstDoubleBreak = true;
@@ -209,6 +216,12 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth, doNotRecu
 	// console.log('svl', severalLeadingResult)
 
 	const src = doubleBreakOnce?severalLeadingResult:onlyOneLeadingResult;
+
+	if (0 < src.leading.length) {
+		// console.log('nofLeadingContentBr', nofLeadingContentBr)
+		while (0 < nofLeadingContentBr--) src.leading[0].splice(0, 0, lastBrNode)
+	}
+
 	const leading = src.leading;
 	const trailing = src.trailing;
 
