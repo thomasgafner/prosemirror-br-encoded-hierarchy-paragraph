@@ -2,8 +2,8 @@ const {EditorState} = require("prosemirror-state")
 const {Slice, Fragment} = require("prosemirror-model")
 const ist = require("ist")
 const {doc, p, br} = require("./builder")
-const {psToGeneralGen,
-	biHrclsEqual, BiHrcl} = require("..") // TODO later from other package
+const {BiHrcl, biHrclsEqual} = require('@thomas.gafner/prosemirror-br-encoded-hierarchy-base')
+const {psToGeneralGen} = require("..")
 
 // :: (Node, [BiHrcl])
 function apply(doc, expectedResult, maxDepth = 3) {
