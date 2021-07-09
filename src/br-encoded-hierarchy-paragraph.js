@@ -5,29 +5,29 @@ import {BiHrcl} from '@thomas.gafner/prosemirror-br-encoded-hierarchy-base'
 // Convert a sequence of paragraphs to general structure.
 export function psToGeneralGen(lineBreakType, maxDepth = 3) {
 	const psToGeneral = function(ps) {
-		let lastRes;
-		const tgtPs = [];
+		let lastRes
+		const tgtPs = []
 		ps.forEach(function(p){
-			// console.log('-----', p.toString());
-			const nodes = [];
-			p.forEach(n => nodes.push(n));
+			// console.log('-----', p.toString())
+			const nodes = []
+			p.forEach(n => nodes.push(n))
 			const depth = lastRes?lastRes.biHrcl.depth-lastRes.trailingBreaks:0
 			const dnr = (depth < maxDepth -1) == false
-			// let pres;
+			// let pres
 			// if (depth < maxDepth -1) {
-			// 	pres = pToGeneral(lineBreakType, maxDepth, nodes, 0, depth);
+			// 	pres = pToGeneral(lineBreakType, maxDepth, nodes, 0, depth)
 			// } else {
-			// 	pres = pToGeneralFlat(lineBreakType, nodes, 0, depth);
+			// 	pres = pToGeneralFlat(lineBreakType, nodes, 0, depth)
 			// }
-			const pres = pToGeneral(lineBreakType, maxDepth, nodes, 0, depth, dnr);
+			const pres = pToGeneral(lineBreakType, maxDepth, nodes, 0, depth, dnr)
 			const biHrcl = pres.biHrcl
 			// console.log('tb', pres.trailingBreaks)
 			biHrcl.setLeadingAttrs(p.attrs)
 			biHrcl.setTrailingAttrs(p.attrs)
-			tgtPs.push(biHrcl);
-			lastRes = pres;
-		});
-		return tgtPs;
+			tgtPs.push(biHrcl)
+			lastRes = pres
+		})
+		return tgtPs
 	}
 	return psToGeneral
 }
@@ -35,27 +35,27 @@ export function psToGeneralGen(lineBreakType, maxDepth = 3) {
 // Collect leading and trailing
 function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth, doNotRecur = false) {
 	// console.log('p', depth)
-	const onlyOneLeadingResult = {leading:[], trailing:[]};
-	const severalLeadingResult = {leading:[], trailing:[]};
-	let nbs = [];
-	let lastNbs; // undefined
-	let nofBreak = 0;
-	let doubleBreakOnce = false;
-	let isFirstDoubleBreak = false;
-	let i=startIndex;
-	let lastBrNode; // undefined
+	const onlyOneLeadingResult = {leading:[], trailing:[]}
+	const severalLeadingResult = {leading:[], trailing:[]}
+	let nbs = []
+	let lastNbs // undefined
+	let nofBreak = 0
+	let doubleBreakOnce = false
+	let isFirstDoubleBreak = false
+	let i=startIndex
+	let lastBrNode // undefined
 	let nofLeadingContentBr = 0
 	while (i<nodes.length) {
-		const node = nodes[i];
-		// console.log('n', node.toString());
+		const node = nodes[i]
+		// console.log('n', node.toString())
 		if (node.type !== lineBreakType) {
 			if (0 < onlyOneLeadingResult.leading.length) {
 				// prepend remainding brs
 				// console.log('nofBreak', isFirstDoubleBreak?'f':' ', nofBreak)
 				for (let i=isFirstDoubleBreak?2:1;i<nofBreak;i++) nbs.push(lastBrNode)
 			}
-			nbs.push(node);
-			nofBreak = 0;
+			nbs.push(node)
+			nofBreak = 0
 		} else { // line break
 			lastBrNode = node
 			// console.log('lb:', doubleBreakOnce?'D':' ', 'b=', nofBreak, 'n=', nbs.length)
@@ -64,29 +64,29 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth, doNotRecu
 				if (onlyOneLeadingResult.leading.length == 0 && nbs.length == 0) {
 					nofLeadingContentBr++
 				}
-				treatNbs(nbs, doubleBreakOnce, onlyOneLeadingResult, severalLeadingResult);
+				treatNbs(nbs, doubleBreakOnce, onlyOneLeadingResult, severalLeadingResult)
 			} else if (onlyOneLeadingResult.leading.length == 0) { // leading line break
 				// do recurse
 				// console.log('rr', depth)
 				const dnr = (depth + 1 < maxDepth - 1) == false
-				return pToGeneral(lineBreakType, maxDepth, nodes, i+1, depth+1, dnr);
+				return pToGeneral(lineBreakType, maxDepth, nodes, i+1, depth+1, dnr)
 			} // all other breaks are just counted
 			if (nofBreak == 1 && 0 < onlyOneLeadingResult.leading.length) {
 				if (doubleBreakOnce == false) {
-					doubleBreakOnce = true;
-					isFirstDoubleBreak = true;
+					doubleBreakOnce = true
+					isFirstDoubleBreak = true
 					// console.log('DBO')
 				} else {
-					isFirstDoubleBreak = false;
+					isFirstDoubleBreak = false
 				}
 			}
-			nofBreak++;
+			nofBreak++
 			if (0 < nbs.length) {
-				lastNbs = nbs;
+				lastNbs = nbs
 			}
-			nbs = [];
+			nbs = []
 		}
-		i++;
+		i++
 	}
 
 	// console.log('nofBreak', nofBreak, 'on level', depth)
@@ -96,21 +96,21 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth, doNotRecu
 	}
 
 	// treat remaining nbs (trailing ones most of the time)
-	treatNbs(nbs, doubleBreakOnce, onlyOneLeadingResult, severalLeadingResult);
+	treatNbs(nbs, doubleBreakOnce, onlyOneLeadingResult, severalLeadingResult)
 
 	// console.log('dbo', doubleBreakOnce)
 	// console.log('ool', onlyOneLeadingResult)
 	// console.log('svl', severalLeadingResult)
 
-	const src = doubleBreakOnce?severalLeadingResult:onlyOneLeadingResult;
+	const src = doubleBreakOnce?severalLeadingResult:onlyOneLeadingResult
 
 	if (0 < src.leading.length) {
 		// console.log('nofLeadingContentBr', nofLeadingContentBr)
 		while (0 < nofLeadingContentBr--) src.leading[0].splice(0, 0, lastBrNode)
 	}
 
-	const leading = src.leading;
-	const trailing = src.trailing;
+	const leading = src.leading
+	const trailing = src.trailing
 
 	return {biHrcl: new BiHrcl(depth, leading, trailing), trailingBreaks: nofBreak}
 }
@@ -118,66 +118,66 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth, doNotRecu
 function treatNbs(nbs, doubleBreakOnce, onlyOneLeadingResult, severalLeadingResult) {
 	if (0 < nbs.length) {
 		if (onlyOneLeadingResult.leading.length == 0) {
-			onlyOneLeadingResult.leading.push(nbs);
+			onlyOneLeadingResult.leading.push(nbs)
 		} else {
-			onlyOneLeadingResult.trailing.push(nbs);
+			onlyOneLeadingResult.trailing.push(nbs)
 		}
 		if (doubleBreakOnce == false) {
-			severalLeadingResult.leading.push(nbs);
+			severalLeadingResult.leading.push(nbs)
 		} else {
-			severalLeadingResult.trailing.push(nbs);
+			severalLeadingResult.trailing.push(nbs)
 		}
 	}
 }
 
 // Collect leading and trailing ones
 // function pToGeneralFlat(lineBreakType, nodes, startIndex, depth) {
-// 	const leading = [];
-// 	const trailing = [];
-// 	let hasDoubleBreak = false;
-// 	let breakIndex = -1;
-// 	let nofBreak = -1;
-// 	let i=startIndex;
+// 	const leading = []
+// 	const trailing = []
+// 	let hasDoubleBreak = false
+// 	let breakIndex = -1
+// 	let nofBreak = -1
+// 	let i=startIndex
 // 	while (i<nodes.length) {
-// 		const node = nodes[i];
+// 		const node = nodes[i]
 // 		if (-1 < nofBreak && node.type === lineBreakType) {
-// 			nofBreak++;
+// 			nofBreak++
 // 			if (breakIndex == -1 && nofBreak == 1) {
-// 				breakIndex = i;
+// 				breakIndex = i
 // 			}
 // 			if (nofBreak == 2) {
-// 				hasDoubleBreak = true;
-// 				break;
+// 				hasDoubleBreak = true
+// 				break
 // 			}
 // 		} else {
-// 			nofBreak = 0;
+// 			nofBreak = 0
 // 		}
-// 		i++;
+// 		i++
 // 	}
 // 	console.log('p flat', depth, hasDoubleBreak?'D':' ', 'b@=', breakIndex)
-// 	let nbs = [];
-// 	i = startIndex;
+// 	let nbs = []
+// 	i = startIndex
 // 	while (i<nodes.length) {
-// 		const node = nodes[i];
-// 		console.log('n', node.toString());
+// 		const node = nodes[i]
+// 		console.log('n', node.toString())
 // 		if (i != breakIndex) {
 // 			if (node.type !== lineBreakType) {
-// 				nbs.push(node);
+// 				nbs.push(node)
 // 			}
 // 		} else {
 // 			// we do not count this (these) br, since they are just for splitting
 // 			leading.push(nbs)
-// 			if (hasDoubleBreak) i++; // ignore one more br
-// 			nbs = [];
+// 			if (hasDoubleBreak) i++ // ignore one more br
+// 			nbs = []
 // 		}
-// 		i++;
+// 		i++
 // 	}
 // 	// treat remaining nbs as trailing ones
 // 	if (0 < nbs.length) {
 // 		if (breakIndex < 0) {
-// 			leading.push(nbs);
+// 			leading.push(nbs)
 // 		} else {
-// 			trailing.push(nbs);
+// 			trailing.push(nbs)
 // 		}
 // 	}
 //

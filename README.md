@@ -18,13 +18,20 @@ A series of paragraphs with leading or trailing line breaks is converted to a ge
 
 # Example
 
-Get the general structure from a series of paragraphs in a ProseMirror document by using `psToGeneral`.
+Get the general structure from a series of paragraphs in a ProseMirror document by using `psToGeneralGen` generator function.
 
 
 ```javascript
-import {psToGeneral} from "prosemirror-br-encoded-hierarchy-paragraph"
+import {psToGeneralGen} from "@thomas.gafner/prosemirror-br-encoded-hierarchy-paragraph"
 
-// TODO
+// Get a doc from a ProseMirror instance.
+
+const ntps = doc.type.schema.nodes
+const psToGeneral = psToGeneralGen(ntps.hard_break, 3)
+
+const generalStructure = psToGeneral(doc)
+
+// use generalStructure to create ul/ol, dl, p with br or any other hierarchical node setup.
 ```
 
 # License
