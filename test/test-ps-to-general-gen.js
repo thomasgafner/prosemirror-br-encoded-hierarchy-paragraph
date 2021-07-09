@@ -3,7 +3,7 @@ const {Slice, Fragment} = require("prosemirror-model")
 const ist = require("ist")
 const {doc, p, br} = require("./builder")
 const {psToGeneralGen,
-	biHrclEqual, BiHrcl} = require("..") // TODO later from other package
+	biHrclsEqual, BiHrcl} = require("..") // TODO later from other package
 
 // :: (Node, [BiHrcl])
 function apply(doc, expectedResult, maxDepth = 3) {
@@ -60,7 +60,7 @@ function apply(doc, expectedResult, maxDepth = 3) {
 	// 	}
 	// }
 
-	ist(actualResult, expectedResult, biHrclEqual)
+	ist(actualResult, expectedResult, biHrclsEqual)
 }
 
 function bi(depth, leading, trailing, nofNodes, trailingBreaks) {

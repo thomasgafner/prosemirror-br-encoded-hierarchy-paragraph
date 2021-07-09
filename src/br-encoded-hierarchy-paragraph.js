@@ -1,6 +1,6 @@
 
 // TODO General hierarchical structure as a class ? (in that package the concept could be explained)
-// TODO later move BiHrcl resp. biHrclEqual to other package
+// TODO later move BiHrcl resp. biHrclsEqual to other package
 // TODO conceptual: trailingBreaks = any or only br that should be in the content but are not? (see tests)
 
 const compNodes = function(as, bs) {
@@ -100,7 +100,7 @@ export class BiHrcl {
   }
 }
 
-export function biHrclEqual(a, b) {
+export function biHrclsEqual(a, b) {
 	if (a.length != b.length) return false
 	for (let i=0;i<a.length;i++) {
 		const ah = a[i]

@@ -1,5 +1,5 @@
 const {schema} = require("prosemirror-schema-basic")
-const {Schema} = require("prosemirror-model")
+// const {Schema} = require("prosemirror-model")
 const {builders} = require("prosemirror-test-builder")
 
 const out = builders(schema, {
