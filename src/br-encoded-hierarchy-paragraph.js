@@ -1,7 +1,6 @@
 
 // TODO General hierarchical structure as a class ? (in that package the concept could be explained)
 // TODO later move BiHrcl resp. biHrclsEqual to other package
-// TODO conceptual: trailingBreaks = any or only br that should be in the content but are not? (see tests)
 
 const compNodes = function(as, bs) {
 	if (as.length != bs.length) return false
@@ -38,9 +37,9 @@ const compAttrsArray = function(as, bs) {
 
 // ::- Hierarchical info of elements with two parts.
 export class BiHrcl {
-  // :: (int, [[Node]], [[Node]], int, int)
+  // :: (int, [[Node]], [[Node]])
   // Create a hierarchical info.
-  constructor(depth, leading, trailing, nofNodes, trailingBreaks = 0) {
+  constructor(depth, leading, trailing) {
 		// :: int
 	  // Number of the level
     this.depth = depth
@@ -48,13 +47,6 @@ export class BiHrcl {
 		this.trailing = trailing
 		this.setLeadingAttrs(Object.create(null))
 		this.setTrailingAttrs(Object.create(null))
-		// :: int
-	  // Original number of nodes including the omitted ones for raising and lowering
-		// level(s) and the one or two for separating leading and trailing part
-		this.nofNodes = nofNodes
-		// :: int
-	  // Number of trailing breaks omitted for lowering level(s)
-		this.trailingBreaks = trailingBreaks
   }
 
 	// :: (Object)
@@ -79,8 +71,6 @@ export class BiHrcl {
 		if (this.depth != othr.depth) return false
 		if (!!this.leading != !!othr.leading) return false
 		if (!!this.trailing != !!othr.trailing) return false
-		if (this.nofNodes != othr.nofNodes) return false
-		if (this.trailingBreaks != othr.trailingBreaks) return false
 		if (this.leading) {
 			const res = compNodes(this.leading, othr.leading)
 			if (!res) return false
@@ -121,7 +111,7 @@ export function psToGeneralGen(lineBreakType, maxDepth = 3) {
 			// console.log('-----', p.toString());
 			const nodes = [];
 			p.forEach(n => nodes.push(n));
-			const depth = lastRes?lastRes.depth-lastRes.trailingBreaks:0;
+			const depth = lastRes?lastRes.biHrcl.depth-lastRes.trailingBreaks:0
 			const dnr = (depth < maxDepth -1) == false
 			// let pres;
 			// if (depth < maxDepth -1) {
@@ -130,10 +120,11 @@ export function psToGeneralGen(lineBreakType, maxDepth = 3) {
 			// 	pres = pToGeneralFlat(lineBreakType, nodes, 0, depth);
 			// }
 			const pres = pToGeneral(lineBreakType, maxDepth, nodes, 0, depth, dnr);
+			const biHrcl = pres.biHrcl
 			// console.log('tb', pres.trailingBreaks)
-			pres.setLeadingAttrs(p.attrs)
-			pres.setTrailingAttrs(p.attrs)
-			tgtPs.push(pres);
+			biHrcl.setLeadingAttrs(p.attrs)
+			biHrcl.setTrailingAttrs(p.attrs)
+			tgtPs.push(biHrcl);
 			lastRes = pres;
 		});
 		return tgtPs;
@@ -176,13 +167,9 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth, doNotRecu
 				treatNbs(nbs, doubleBreakOnce, onlyOneLeadingResult, severalLeadingResult);
 			} else if (onlyOneLeadingResult.leading.length == 0) { // leading line break
 				// do recurse
-				let resTrailing;
 				// console.log('rr', depth)
 				const dnr = (depth + 1 < maxDepth - 1) == false
-				resTrailing = pToGeneral(lineBreakType, maxDepth, nodes, i+1, depth+1, dnr);
-				// console.log('resTrailing', resTrailing);
-				resTrailing.nofNodes++
-				return resTrailing
+				return pToGeneral(lineBreakType, maxDepth, nodes, i+1, depth+1, dnr);
 			} // all other breaks are just counted
 			if (nofBreak == 1 && 0 < onlyOneLeadingResult.leading.length) {
 				if (doubleBreakOnce == false) {
@@ -225,7 +212,7 @@ function pToGeneral(lineBreakType, maxDepth, nodes, startIndex, depth, doNotRecu
 	const leading = src.leading;
 	const trailing = src.trailing;
 
-	return new BiHrcl(depth, leading, trailing, (i - startIndex), nofBreak)
+	return {biHrcl: new BiHrcl(depth, leading, trailing), trailingBreaks: nofBreak}
 }
 
 function treatNbs(nbs, doubleBreakOnce, onlyOneLeadingResult, severalLeadingResult) {
