@@ -22,9 +22,9 @@ function attrsAllOrNull(biHrcl) {
 	return first
 }
 
-// :: (Type, Type) → ([BiHrcl] → [Node])
+// :: (Type, Type, int) → ([BiHrcl] → [Node])
 // Creates a function, that converts an array of general hierarchical elements to an array of paragraphs.
-export function generalToPsGen(lineBreakType, paragraphType) {
+export function generalToPsGen(lineBreakType, paragraphType, maxDepth = 3) {
 	const generalToPs = function(gs) {
 		// Return an array of paragraph.
 		const lb = lineBreakType.create()
@@ -37,7 +37,8 @@ export function generalToPsGen(lineBreakType, paragraphType) {
 			const content = []
 
 			// Add brs that are increasing hierarchy markers
-			for (let i=d;i<g.depth;i++) {
+			let depth = g.depth<maxDepth?g.depth:maxDepth
+			for (let i=d;i<depth;i++) {
 				content.push(lb)
 			}
 
@@ -64,11 +65,13 @@ export function generalToPsGen(lineBreakType, paragraphType) {
 			})
 
 			// Add brs that are decreasing hierarchy markers
-			let nextDepth = g.depth
+			let nextDepth = depth // maxDepth already checked
 			if (j < gs.length-1) {
 				nextDepth = gs[j+1].depth
+				if (nextDepth < 0) nextDepth = 0
+				if (maxDepth < nextDepth) nextDepth = maxDepth
 			}
-			for (let i=g.depth;nextDepth<i;i--) {
+			for (let i=depth;nextDepth<i;i--) {
 				content.push(lb)
 			}
 

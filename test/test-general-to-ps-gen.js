@@ -69,7 +69,7 @@ function raply(expectedDoc, infos, maxDepth = 3) {
 
 	const ntps = expectedDoc.type.schema.nodes
 
-	const generalToPs = generalToPsGen(ntps.hard_break, ntps.paragraph)
+	const generalToPs = generalToPsGen(ntps.hard_break, ntps.paragraph, maxDepth)
 	const actualResult = generalToPs(infos) // array of p
 
 	const expectedParray = []
