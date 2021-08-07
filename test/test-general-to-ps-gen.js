@@ -19,8 +19,8 @@ function apply(expectedDoc, infos, maxDepth = 3) {
 	ist(actualResult.length, expectedParray.length)
 	if (actualResult.length == expectedParray.length) {
 		for (let i=0;i<actualResult.length;i++) {
-			// console.log('act', actualResult[i])
-			// console.log('exp', expectedParray[i])
+			// console.log('act', actualResult[i].content.content)
+			// console.log('exp', expectedParray[i].content.content)
 			ist(expectedParray[i].eq(actualResult[i]))
 		}
 	}

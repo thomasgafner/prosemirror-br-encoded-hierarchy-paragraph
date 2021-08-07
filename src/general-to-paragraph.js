@@ -74,6 +74,7 @@ export function generalToPsGen(lineBreakType, paragraphType, maxDepth = 3) {
 			for (let i=depth;nextDepth<i;i--) {
 				content.push(lb)
 			}
+			d = depth
 
 			// create the paragraph
 			const para = paragraphType.create(attrs, content) // no marks
