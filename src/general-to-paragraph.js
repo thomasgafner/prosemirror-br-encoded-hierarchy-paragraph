@@ -33,6 +33,13 @@ export function generalToPsGen(lineBreakType, paragraphType, maxDepth = 3) {
 		for (let j=0;j<gs.length;j++) {
 			const g = gs[j]
 
+			let nextDepth = depth // maxDepth already checked
+			if (j < gs.length-1) {
+				nextDepth = gs[j+1].depth
+				if (nextDepth < 0) nextDepth = 0
+				if (maxDepth < nextDepth) nextDepth = maxDepth
+			}
+
 			// g of BiHrcl
 			const content = []
 
@@ -53,7 +60,7 @@ export function generalToPsGen(lineBreakType, paragraphType, maxDepth = 3) {
 			})
 			if (0 < g.trailing.length) {
 				content.push(lb) // br between leading and trailing
-				if (1 < g.leading.length) {
+				if (1 < g.leading.length || nextDepth < depth-1) {
 					content.push(lb) // make it a double br
 				}
 			}
@@ -65,12 +72,6 @@ export function generalToPsGen(lineBreakType, paragraphType, maxDepth = 3) {
 			})
 
 			// Add brs that are decreasing hierarchy markers
-			let nextDepth = depth // maxDepth already checked
-			if (j < gs.length-1) {
-				nextDepth = gs[j+1].depth
-				if (nextDepth < 0) nextDepth = 0
-				if (maxDepth < nextDepth) nextDepth = maxDepth
-			}
 			for (let i=depth;nextDepth<i;i--) {
 				content.push(lb)
 			}

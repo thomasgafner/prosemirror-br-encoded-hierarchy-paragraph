@@ -19,6 +19,9 @@ function apply(expectedDoc, infos, maxDepth = 3) {
 	ist(actualResult.length, expectedParray.length)
 	if (actualResult.length == expectedParray.length) {
 		for (let i=0;i<actualResult.length;i++) {
+			// const dout = (x) => x.content.content.type.name + ' ' + x.content.content.text
+			// console.log('act', dout(actualResult[i])) that does not work like this (it is an array)
+			// console.log('exp', dout(expectedParray[i]))
 			// console.log('act', actualResult[i].content.content)
 			// console.log('exp', expectedParray[i].content.content)
 			ist(expectedParray[i].eq(actualResult[i]))
