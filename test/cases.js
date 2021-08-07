@@ -23,6 +23,8 @@ function iAttrs(biHrcl, attrs) {
 
 const attrs0 = {ex:true}
 
+// Pick a subset of tests by adding only:true
+
 const cases = [
 	'in the flat (no hierarchy) cases',
 	// All these cases here have no leading nor trailing br.
@@ -91,6 +93,7 @@ const cases = [
 		i: () => [
 					iAttrs(bi(0, [[t('AB')]],  [[t('CD')]]), attrs0)
 				]
+		// ,only: true
 	},
 
 	// Tests where brs are at the beginning and at the end to control hierarchy.
@@ -463,7 +466,8 @@ function runTest(tstFct, suffix = '') {
 
 				for (let j=caseNo+1; j<cases.length && typeof cases[j] != 'string'; j++) {
 					const cs = cases[j]
-					it(cs.t + suffix, () =>
+					const tstIt = cs.only?it.only:it
+					tstIt(cs.t + suffix, () =>
 						tstFct(
 							cs.d(),
 							cs.i(),
