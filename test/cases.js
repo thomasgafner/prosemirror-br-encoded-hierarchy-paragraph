@@ -21,6 +21,8 @@ function iAttrs(biHrcl, attrs) {
 	return biHrcl
 }
 
+const attrs0 = {ex:true}
+
 const cases = [
 	'in the flat (no hierarchy) cases',
 	{	t:'only creates one leading node group if there is no br at all in the paragraph',
@@ -46,7 +48,58 @@ const cases = [
 		i: () => [
 			bi(0, [[t('AB')]],  [[t('CD')], [t('EF')]])
 		]
+	},
+	'concerning attributes of the groups',
+	{
+		t: 'takes the attributes of the paragraph and assigns them to every group',
+		d: () => doc(
+			pAttrs(p('AB',br(),'CD'), attrs0)
+		),
+		i: () => [
+			iAttrs(bi(0, [[t('AB')]],  [[t('CD')]]), attrs0)
+		]
+	},
+	'in hierarchical cases with steps larger than one level',
+	{
+		t: 'handles a single sublist of level three',
+		d: () => doc(
+			p('A'),
+			p('B'),
+			p(br(), br(), br(), 'i'),
+			p('ii'),
+			p('iii', br(), br(), br()),
+			p('C')
+		),
+		i: () => [
+			bi(0, [[t('A')]], []),
+			bi(0, [[t('B')]], []),
+			bi(3, [[t('i')]], []),
+			bi(3, [[t('ii')]], []),
+			bi(3, [[t('iii')]], []),
+			bi(0, [[t('C')]], [])
+		],
+		maxDepth: 5
+	},
+	{
+		t: 'handles a sublist, that only consists of just one group on highest level, when the level goes from second to highest and immediately back to second',
+		d: () => doc(
+			p('A'),
+			p(br(), 'i'),
+			p(br(), br(), br(), 'U', br(), br(), br()),
+			p('ii', br()),
+			p('B')
+		),
+		i: () => [
+			bi(0, [[t('A')]], []),
+			bi(1, [[t('i')]], []),
+			bi(4, [[t('U')]], []),
+			bi(1, [[t('ii')]], []),
+			bi(0, [[t('B')]], [])
+		],
+		maxDepth: 5
 	}
+
+
 	// TODO more cases
 	// TODO more topics
 ]
