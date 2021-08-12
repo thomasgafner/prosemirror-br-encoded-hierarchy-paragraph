@@ -79,6 +79,10 @@ export function generalToPsGen(lineBreakType, paragraphType, maxDepth = 3) {
 
 			// create the paragraph
 			const para = paragraphType.create(attrs, content) // no marks
+			// TODO may be the default p spec does not allow attributes - ?
+			//   Also the tests function pAttrs might be wrong
+			// console.log('attrs', attrs)
+			// console.log('para', para)
 			res.push(para)
 		}
 		return res
