@@ -1,6 +1,6 @@
 {
   "name": "@thomas.gafner/prosemirror-br-encoded-hierarchy-paragraph",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Functions that derive hierarchy from paragraphs by interpreting line breaks.",
   "keywords": [
     "ProseMirror",
